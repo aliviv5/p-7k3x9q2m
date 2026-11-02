@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" role="img" aria-labelledby="t">
+<title id="t">Пикап: обезличенный силуэт (запас для класса рамных)</title>
+<path d="M 40 364 L 36 236 L 302 236 L 302 150 Q 304 132 324 130 L 478 126 Q 500 127 512 142 L 566 206 L 722 218 Q 752 223 756 254 L 760 336 Q 760 362 738 364 L 689.9 364 A 75 75 0 1 0 540.1 364 L 264.9 364 A 75 75 0 1 0 115.1 364 Z" fill="#2A323C" stroke="#AEB8C2" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M 322 206 L 324 146 Q 326 138 338 138 L 474 136 Q 490 137 500 148 L 548 204 Z" fill="#10151A" stroke="#AEB8C2" stroke-width="1.5" stroke-linejoin="round" stroke-opacity="0.7"/>
+<rect x="416" y="136" width="12" height="70" fill="#2A323C"/>
+<line x1="424" y1="206" x2="424" y2="350" stroke="#4A5562" stroke-width="1.5"/>
+<line x1="44" y1="250" x2="296" y2="250" stroke="#4A5562" stroke-width="1.5"/>
+<rect x="734" y="232" width="20" height="14" rx="4" fill="#DDE3E8" opacity="0.85"/>
+<rect x="38" y="246" width="8" height="26" rx="3" fill="#8A3B33" opacity="0.9"/>
+<line x1="270.9" y1="367" x2="534.1" y2="367" stroke="#F5A524" stroke-width="4" stroke-linecap="round"/>
+<path d="M 259.0 360 A 69 69 0 0 0 121.0 360" fill="none" stroke="#F5A524" stroke-width="3" stroke-linecap="round"/>
+<circle cx="190" cy="360" r="62" fill="#0B0E11" stroke="#8A95A1" stroke-width="2"/>
+<circle cx="190" cy="360" r="37.2" fill="#3A444F" stroke="#8A95A1" stroke-width="1.5"/>
+<circle cx="190" cy="360" r="8.7" fill="#AEB8C2"/>
+<path d="M 684.0 360 A 69 69 0 0 0 546.0 360" fill="none" stroke="#F5A524" stroke-width="3" stroke-linecap="round"/>
+<circle cx="615" cy="360" r="62" fill="#0B0E11" stroke="#8A95A1" stroke-width="2"/>
+<circle cx="615" cy="360" r="37.2" fill="#3A444F" stroke="#8A95A1" stroke-width="1.5"/>
+<circle cx="615" cy="360" r="8.7" fill="#AEB8C2"/>
+</svg>

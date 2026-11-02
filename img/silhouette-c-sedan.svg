@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" role="img" aria-labelledby="t">
+<title id="t">Компактный класс (C): обезличенный седан</title>
+<path d="M 70 380 L 66 320 Q 66 298 80 290 L 160 278 Q 185 275 205 262 L 270 192 Q 285 178 310 176 L 470 174 Q 500 175 522 192 L 590 245 L 700 262 Q 740 270 748 305 L 752 350 Q 752 378 728 380 L 664.2 380 A 65 65 0 1 0 535.8 380 L 274.2 380 A 65 65 0 1 0 145.8 380 Z" fill="#2A323C" stroke="#AEB8C2" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M 222 262 L 280 200 Q 290 190 310 189 L 468 187 Q 492 188 508 200 L 568 248 Z" fill="#10151A" stroke="#AEB8C2" stroke-width="1.5" stroke-linejoin="round" stroke-opacity="0.7"/>
+<rect x="384" y="186" width="12" height="70" fill="#2A323C"/>
+<line x1="392" y1="256" x2="392" y2="366" stroke="#4A5562" stroke-width="1.5"/>
+<rect x="724" y="276" width="22" height="10" rx="4" fill="#DDE3E8" opacity="0.85"/>
+<rect x="70" y="300" width="10" height="16" rx="3" fill="#8A3B33" opacity="0.9"/>
+<line x1="280.2" y1="383" x2="529.8" y2="383" stroke="#F5A524" stroke-width="4" stroke-linecap="round"/>
+<path d="M 268.7 376 A 59 59 0 1 0 151.3 376" fill="none" stroke="#F5A524" stroke-width="3" stroke-linecap="round"/>
+<circle cx="210" cy="370" r="52" fill="#0B0E11" stroke="#8A95A1" stroke-width="2"/>
+<circle cx="210" cy="370" r="31.2" fill="#3A444F" stroke="#8A95A1" stroke-width="1.5"/>
+<circle cx="210" cy="370" r="7.3" fill="#AEB8C2"/>
+<path d="M 658.7 376 A 59 59 0 1 0 541.3 376" fill="none" stroke="#F5A524" stroke-width="3" stroke-linecap="round"/>
+<circle cx="600" cy="370" r="52" fill="#0B0E11" stroke="#8A95A1" stroke-width="2"/>
+<circle cx="600" cy="370" r="31.2" fill="#3A444F" stroke="#8A95A1" stroke-width="1.5"/>
+<circle cx="600" cy="370" r="7.3" fill="#AEB8C2"/>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" role="img" aria-labelledby="t">
+<title id="t">Средний класс (D, E): обезличенный кроссовер</title>
+<path d="M 72 372 L 70 290 Q 70 262 84 248 L 120 180 Q 132 160 160 156 L 470 150 Q 505 151 530 172 L 600 228 L 712 246 Q 748 254 754 290 L 758 342 Q 758 370 735 372 L 675.5 372 A 71 71 0 1 0 534.5 372 L 275.5 372 A 71 71 0 1 0 134.5 372 Z" fill="#2A323C" stroke="#AEB8C2" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M 128 226 L 150 182 Q 158 168 180 167 L 466 163 Q 492 164 510 178 L 572 228 Z" fill="#10151A" stroke="#AEB8C2" stroke-width="1.5" stroke-linejoin="round" stroke-opacity="0.7"/>
+<rect x="372" y="162" width="12" height="68" fill="#2A323C"/>
+<rect x="176" y="166" width="12" height="62" fill="#2A323C"/>
+<line x1="382" y1="230" x2="382" y2="358" stroke="#4A5562" stroke-width="1.5"/>
+<rect x="728" y="262" width="24" height="10" rx="4" fill="#DDE3E8" opacity="0.85"/>
+<rect x="74" y="262" width="10" height="24" rx="3" fill="#8A3B33" opacity="0.9"/>
+<line x1="281.5" y1="375" x2="528.5" y2="375" stroke="#F5A524" stroke-width="4" stroke-linecap="round"/>
+<path d="M 269.9 368 A 65 65 0 1 0 140.1 368" fill="none" stroke="#F5A524" stroke-width="3" stroke-linecap="round"/>
+<circle cx="205" cy="364" r="58" fill="#0B0E11" stroke="#8A95A1" stroke-width="2"/>
+<circle cx="205" cy="364" r="34.8" fill="#3A444F" stroke="#8A95A1" stroke-width="1.5"/>
+<circle cx="205" cy="364" r="8.1" fill="#AEB8C2"/>
+<path d="M 669.9 368 A 65 65 0 1 0 540.1 368" fill="none" stroke="#F5A524" stroke-width="3" stroke-linecap="round"/>
+<circle cx="605" cy="364" r="58" fill="#0B0E11" stroke="#8A95A1" stroke-width="2"/>
+<circle cx="605" cy="364" r="34.8" fill="#3A444F" stroke="#8A95A1" stroke-width="1.5"/>
+<circle cx="605" cy="364" r="8.1" fill="#AEB8C2"/>
+</svg>

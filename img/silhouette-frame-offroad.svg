@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" role="img" aria-labelledby="t">
+<title id="t">Рамные внедорожники, пикапы, микроавтобусы: обезличенный рамный внедорожник</title>
+<rect x="40" y="216" width="34" height="110" rx="12" fill="#0B0E11" stroke="#AEB8C2" stroke-width="2"/>
+<path d="M 70 354 L 68 236 Q 68 214 80 206 L 92 140 Q 96 124 116 122 L 486 118 Q 506 119 516 134 L 566 200 L 718 212 Q 748 216 752 248 L 756 330 Q 756 352 734 354 L 676.9 354 A 77 77 0 0 0 523.1 354 L 286.9 354 A 77 77 0 0 0 133.1 354 Z" fill="#2A323C" stroke="#AEB8C2" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M 96 196 L 106 140 Q 109 132 120 132 L 482 130 Q 496 131 503 142 L 548 198 Z" fill="#10151A" stroke="#AEB8C2" stroke-width="1.5" stroke-linejoin="round" stroke-opacity="0.7"/>
+<rect x="226" y="130" width="12" height="70" fill="#2A323C"/>
+<rect x="370" y="128" width="12" height="72" fill="#2A323C"/>
+<line x1="380" y1="200" x2="380" y2="340" stroke="#4A5562" stroke-width="1.5"/>
+<rect x="730" y="226" width="20" height="14" rx="4" fill="#DDE3E8" opacity="0.85"/>
+<rect x="72" y="222" width="8" height="26" rx="3" fill="#8A3B33" opacity="0.9"/>
+<line x1="292.9" y1="357" x2="517.1" y2="357" stroke="#F5A524" stroke-width="4" stroke-linecap="round"/>
+<path d="M 280.5 350 A 71 71 0 0 0 139.5 350" fill="none" stroke="#F5A524" stroke-width="3" stroke-linecap="round"/>
+<circle cx="210" cy="358" r="64" fill="#0B0E11" stroke="#8A95A1" stroke-width="2"/>
+<circle cx="210" cy="358" r="38.4" fill="#3A444F" stroke="#8A95A1" stroke-width="1.5"/>
+<circle cx="210" cy="358" r="9.0" fill="#AEB8C2"/>
+<path d="M 670.5 350 A 71 71 0 0 0 529.5 350" fill="none" stroke="#F5A524" stroke-width="3" stroke-linecap="round"/>
+<circle cx="600" cy="358" r="64" fill="#0B0E11" stroke="#8A95A1" stroke-width="2"/>
+<circle cx="600" cy="358" r="38.4" fill="#3A444F" stroke="#8A95A1" stroke-width="1.5"/>
+<circle cx="600" cy="358" r="9.0" fill="#AEB8C2"/>
+</svg>

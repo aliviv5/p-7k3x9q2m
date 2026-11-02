@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" role="img" aria-labelledby="t">
+<title id="t">Микроавтобус: обезличенный силуэт (запас для класса рамных)</title>
+<path d="M 40 372 L 38 130 Q 38 100 66 98 L 560 92 Q 590 92 604 112 L 680 220 Q 740 232 752 270 L 756 344 Q 756 370 732 372 L 678.7 372 A 69 69 0 1 0 541.3 372 L 258.7 372 A 69 69 0 1 0 121.3 372 Z" fill="#2A323C" stroke="#AEB8C2" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M 62 200 L 62 128 Q 62 116 76 116 L 556 112 Q 574 112 584 126 L 650 214 Z" fill="#10151A" stroke="#AEB8C2" stroke-width="1.5" stroke-linejoin="round" stroke-opacity="0.7"/>
+<rect x="168" y="112" width="12" height="92" fill="#2A323C"/>
+<rect x="288" y="112" width="12" height="94" fill="#2A323C"/>
+<rect x="408" y="112" width="12" height="96" fill="#2A323C"/>
+<rect x="528" y="112" width="12" height="100" fill="#2A323C"/>
+<line x1="300" y1="204" x2="300" y2="358" stroke="#4A5562" stroke-width="1.5"/>
+<line x1="420" y1="204" x2="420" y2="358" stroke="#4A5562" stroke-width="1.5"/>
+<rect x="728" y="248" width="22" height="12" rx="4" fill="#DDE3E8" opacity="0.85"/>
+<rect x="40" y="150" width="8" height="40" rx="3" fill="#8A3B33" opacity="0.9"/>
+<line x1="264.7" y1="375" x2="535.3" y2="375" stroke="#F5A524" stroke-width="4" stroke-linecap="round"/>
+<path d="M 253.0 368 A 63 63 0 1 0 127.0 368" fill="none" stroke="#F5A524" stroke-width="3" stroke-linecap="round"/>
+<circle cx="190" cy="366" r="56" fill="#0B0E11" stroke="#8A95A1" stroke-width="2"/>
+<circle cx="190" cy="366" r="33.6" fill="#3A444F" stroke="#8A95A1" stroke-width="1.5"/>
+<circle cx="190" cy="366" r="7.8" fill="#AEB8C2"/>
+<path d="M 673.0 368 A 63 63 0 1 0 547.0 368" fill="none" stroke="#F5A524" stroke-width="3" stroke-linecap="round"/>
+<circle cx="610" cy="366" r="56" fill="#0B0E11" stroke="#8A95A1" stroke-width="2"/>
+<circle cx="610" cy="366" r="33.6" fill="#3A444F" stroke="#8A95A1" stroke-width="1.5"/>
+<circle cx="610" cy="366" r="7.8" fill="#AEB8C2"/>
+</svg>

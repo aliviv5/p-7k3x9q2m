@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" role="img" aria-labelledby="t">
+<title id="t">Малый класс (А, В): обезличенный хэтчбек</title>
+<path d="M 145 382 L 138 316 Q 138 288 150 270 L 176 200 Q 184 172 212 168 L 420 162 Q 452 163 478 182 L 548 238 L 660 254 Q 704 263 714 298 L 720 350 Q 722 380 698 382 L 642.2 382 A 63 63 0 1 0 517.8 382 L 302.2 382 A 63 63 0 1 0 177.8 382 Z" fill="#2A323C" stroke="#AEB8C2" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M 190 240 L 212 184 Q 218 176 232 176 L 415 173 Q 440 174 460 188 L 520 236 Z" fill="#10151A" stroke="#AEB8C2" stroke-width="1.5" stroke-linejoin="round" stroke-opacity="0.7"/>
+<rect x="332" y="172" width="12" height="68" fill="#2A323C"/>
+<line x1="342" y1="240" x2="342" y2="368" stroke="#4A5562" stroke-width="1.5"/>
+<rect x="694" y="268" width="22" height="10" rx="4" fill="#DDE3E8" opacity="0.85"/>
+<rect x="142" y="290" width="10" height="22" rx="3" fill="#8A3B33" opacity="0.9"/>
+<line x1="308.2" y1="385" x2="511.8" y2="385" stroke="#F5A524" stroke-width="4" stroke-linecap="round"/>
+<path d="M 296.7 378 A 57 57 0 1 0 183.3 378" fill="none" stroke="#F5A524" stroke-width="3" stroke-linecap="round"/>
+<circle cx="240" cy="372" r="50" fill="#0B0E11" stroke="#8A95A1" stroke-width="2"/>
+<circle cx="240" cy="372" r="30.0" fill="#3A444F" stroke="#8A95A1" stroke-width="1.5"/>
+<circle cx="240" cy="372" r="7.0" fill="#AEB8C2"/>
+<path d="M 636.7 378 A 57 57 0 1 0 523.3 378" fill="none" stroke="#F5A524" stroke-width="3" stroke-linecap="round"/>
+<circle cx="580" cy="372" r="50" fill="#0B0E11" stroke="#8A95A1" stroke-width="2"/>
+<circle cx="580" cy="372" r="30.0" fill="#3A444F" stroke="#8A95A1" stroke-width="1.5"/>
+<circle cx="580" cy="372" r="7.0" fill="#AEB8C2"/>
+</svg>
