@@ -256,7 +256,7 @@
   var heroBrand, heroModel, calcBrand, calcModel;
 
   function buildCalc() {
-    el.pkgGrid = $('#pkg-grid'); el.arches = $('#arches'); el.archesPrice = $('#arches-price'); el.archesStub = $('#arches-stub');
+    el.pkgGrid = $('#pkg-grid'); el.arches = $('#arches'); el.archesPrice = $('#arches-price'); el.archesStub = $('#arches-stub'); el.archesOff = $('#arches-off');
     el.classbox = $('#classbox'); el.className = $('#class-name'); el.classSil = $('#class-sil'); el.classNote = $('#class-note');
     el.custom = $('#custom'); el.customText = $('#custom-text'); el.silGrid = $('#sil-grid');
     el.resBody = $('#result-body'); el.formWrap = $('#calc-form-wrap');
@@ -291,6 +291,7 @@
       tg.textContent = on ? 'Скрыть состав пакетов' : 'Показать состав пакетов';
     });
 
+    $('#arches-pick').addEventListener('click', function () { S.pkg = 'standard'; S.arches = true; goal('calc_package'); goal('calc_arches'); render(); el.arches.focus({ preventScroll: true }); });
     el.arches.addEventListener('change', function () { S.arches = el.arches.checked; goal('calc_arches'); render(); });
     $('#calc-nomodel').addEventListener('click', function () { setCustom(true); el.customText.focus(); });
     $('#hero-nomodel').addEventListener('click', function () { setCustom(true); scrollTo($('#calc')); setTimeout(function () { el.customText.focus({ preventScroll: true }); }, 400); });
@@ -376,6 +377,8 @@
     else { el.archesPrice.appendChild(document.createTextNode('+\u00a0')); add(el.archesPrice, ['[10 000]']); el.archesPrice.appendChild(document.createTextNode('\u00a0₽')); }
 
     if (el.archesStub) el.archesStub.hidden = S.pkg !== 'antishum';
+    el.archesOff.hidden = S.pkg !== 'bottom';
+    el.arches.closest('.switch').classList.toggle('off', S.pkg === 'bottom');
     renderResult();
     syncUrl();
   }
@@ -701,7 +704,8 @@
     var b = $('#cookie'), ok = false;
     try { ok = localStorage.getItem('ak_cookie') === '1'; } catch (e) { /* нет хранилища */ }
     b.hidden = ok;
-    $('#cookie-ok').addEventListener('click', function () { b.hidden = true; try { localStorage.setItem('ak_cookie', '1'); } catch (e) { /* нет хранилища */ } });
+    document.body.classList.toggle('has-cookie', !ok);
+    $('#cookie-ok').addEventListener('click', function () { b.hidden = true; document.body.classList.remove('has-cookie'); try { localStorage.setItem('ak_cookie', '1'); } catch (e) { /* нет хранилища */ } });
   }
   function initMetrikaId() {
     /* ЗАГЛУШКА: когда владелец даст номер счётчика и подключит код, поле уйдёт вместе с заявкой в CRM. */
