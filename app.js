@@ -9,8 +9,8 @@
   /* ---------- Одно место для данных владельца. Пусто = на странице остаётся жёлтая метка. ---------- */
   var CONFIG = {
     name: '', phone: '', address: '', telegram: '', owner: '',
-    years: '',            // срок гарантии, лет (5 или 7 — решает владелец)
-    posts: '', cars_day: '', hours: '', odor_days: '', callback: '', nearest: '',
+    years: '7',           // срок гарантии, лет (решение владельца 03.11.2026)
+    posts: '7', cars_day: '', hours: '', odor_days: '', callback: '', nearest: '',
     ymId: 0,              // ЗАГЛУШКА: номер счётчика Яндекс Метрики даст владелец
     policyVersion: 'v1 (заглушка)',
     prod: false           // боевой сайт: true. Тогда адрес ?show=... игнорируется, а отзывы-примеры выключены
@@ -36,7 +36,7 @@
       inc: ['То же, что «Стандарт», составы с цинком ', ['[материал]']],
       incShort: 'снятие колёс, подкрылков и защиты · мойка и сушка · днище и арки, скрытые полости — составы с цинком' }
   };
-  var FORM_RU = { calc: 'калькулятор', quiz: 'квиз', contact: 'контакты', no_model: 'калькулятор, «моей модели нет»' };
+  var FORM_RU = { calc: 'калькулятор', quiz: 'подбор пакета по вопросам', contact: 'контакты', no_model: 'калькулятор, «моей модели нет»' };
 
   /* ---------- Утилиты ---------- */
   function own(o, k) { return Object.prototype.hasOwnProperty.call(o, k); }
@@ -256,7 +256,7 @@
   var heroBrand, heroModel, calcBrand, calcModel;
 
   function buildCalc() {
-    el.pkgGrid = $('#pkg-grid'); el.arches = $('#arches'); el.archesPrice = $('#arches-price');
+    el.pkgGrid = $('#pkg-grid'); el.arches = $('#arches'); el.archesPrice = $('#arches-price'); el.archesStub = $('#arches-stub');
     el.classbox = $('#classbox'); el.className = $('#class-name'); el.classSil = $('#class-sil'); el.classNote = $('#class-note');
     el.custom = $('#custom'); el.customText = $('#custom-text'); el.silGrid = $('#sil-grid');
     el.resBody = $('#result-body'); el.formWrap = $('#calc-form-wrap');
@@ -375,6 +375,7 @@
     if (cls) { el.archesPrice.appendChild(document.createTextNode('+' + rub(archesOf(cls)) + ' ')); el.archesPrice.appendChild(h('small', { class: 'pn', text: 'цены будут уточнены' })); }
     else { el.archesPrice.appendChild(document.createTextNode('+\u00a0')); add(el.archesPrice, ['[10 000]']); el.archesPrice.appendChild(document.createTextNode('\u00a0₽')); }
 
+    if (el.archesStub) el.archesStub.hidden = S.pkg !== 'antishum';
     renderResult();
     syncUrl();
   }
@@ -393,7 +394,7 @@
       h('p', {}, h('b', { text: 'Что входит' }), inc + '.'),
       h('p', {}, h('b', { text: 'Что может изменить цену' }), 'сильная ржавчина, которую надо зачистить до обработки · снятие старого антикора · нестандартная защита или обвес. Об этом скажем на осмотре — до начала работ.'),
       h('p', {}, h('b', { text: 'Когда цена окончательная' }), 'после осмотра машины в боксе. Записываем её в заказ-наряд, и после этого она не меняется ', ['[уточняется]'], '.'),
-      h('p', {}, h('b', { text: 'Гарантия' }), ['[N]', 'years'], ' лет на покрытие при условиях · ', h('a', { href: '#warranty' }, 'подробнее'))));
+      h('p', {}, h('b', { text: 'Гарантия' }), ['[N]', 'years'], ' лет на покрытие в обработанных зонах, при условиях · ', h('a', { href: '#warranty' }, 'условия'))));
     var go = h('button', { class: 'btn', type: 'button', text: 'Записаться с этим расчётом' });
     go.addEventListener('click', function () { el.formWrap.hidden = false; scrollTo(el.formWrap); setTimeout(function () { $('#calc-phone').focus({ preventScroll: true }); }, 350); goal('calc_book'); });
     var cp = h('button', { class: 'btn btn-ghost', type: 'button', text: 'Скопировать ссылку на расчёт' });
@@ -542,14 +543,21 @@
       pd_consent: !!form.elements.pd_consent.checked, pd_consent_at: p.day + '.' + p.month + '.' + p.year + ' ' + p.hour + ':' + p.minute + ' МСК', policy_version: CONFIG.policyVersion
     };
   }
-  /* В Telegram уходит только сигнал: номер заявки, машина, пакет и ссылка на сделку в CRM.
-     Имя, телефон и прочие данные клиента остаются в CRM в России (152-ФЗ). */
+  /* Сообщение в мессенджер (Telegram или MAX) и письмо на почту: имя, телефон и все ответы формы (решение владельца 03.11.2026).
+     В прототипе ничего не отправляется - текст только показывается на экране. */
   function tgText(l) {
     var pk = l.package ? PK[l.package].name + (l.arches ? ' + шумоизоляция арок' : '') : '';
     var car = l.model_custom ? l.model_custom + ' (класс выбран клиентом: ' + l.class_name + ')' : (l.brand ? joinName(l.brand, l.model) + ', класс: ' + l.class_name : 'не указана');
-    var lines = ['Новая заявка ' + l.lead_id + ' — [ссылка на сделку в CRM появится после подключения CRM]', 'Машина: ' + car];
+    var lines = ['Новая заявка ' + l.lead_id + ' от ' + l.created_at, 'Имя: ' + (l.name || 'не указано'), 'Телефон: ' + l.phone];
+    if (l.contact_method) lines.push('Как связаться: ' + l.contact_method);
+    lines.push('Машина: ' + car);
     if (pk) lines.push('Пакет: ' + pk);
-    lines.push('Имя, телефон и остальное — в карточке CRM.');
+    if (l.price_shown != null && l.price_shown !== '') lines.push('Цена в расчёте: ' + rub(l.price_shown));
+    if (l.car_age) lines.push('Возраст машины: ' + l.car_age);
+    if (l.underbody_state) lines.push('Состояние днища: ' + l.underbody_state);
+    if (l.prior_treatment) lines.push('Прежняя обработка: ' + l.prior_treatment);
+    if (l.priority) lines.push('Что главное: ' + l.priority);
+    lines.push('Форма: ' + (FORM_RU[l.form] || l.form) + (l.calc_link ? ' · расчёт: ' + l.calc_link : ''));
     return lines.join('\n');
   }
   function submitLead(form, ctx) {
@@ -657,7 +665,7 @@
     var pi = Q.a[3] == null ? 1 : Q.a[3], id = Q_PKG[pi], car = qCar();
     qBody.appendChild(h('h3', { tabindex: '-1', text: 'Вам подойдёт пакет «' + PK[id].name + '»' }));
     var why = h('div', { class: 'q-extra' }, h('p', { text: Q_WHY[pi] + ' Точнее скажем на осмотре: посмотрим днище и покажем вам.' }));
-    if ((Q.a[0] === 0 || Q.a[0] === 1) && id === 'bottom') why.appendChild(h('p', { text: 'Для новой машины подойдёт Стандарт или Антишум: заводская защита, как правило, закрывает не все зоны [уточнить у владельца]. Покажем на осмотре, что есть на вашей машине. Решать вам.' }));
+    if ((Q.a[0] === 0 || Q.a[0] === 1) && id === 'bottom') why.appendChild(h('p', null, 'Для новой машины подойдёт Стандарт или Антишум: заводская защита, как правило, закрывает не все зоны ', ['[уточнить]'], '. Покажем на осмотре, что есть на вашей машине. Решать вам.'));
     if (Q.a[1] === 2) why.appendChild(h('p', { text: 'Сначала посмотрим днище: возможно, нужна зачистка, и цена изменится. Скажем до начала работ.' }));
     if (Q.a[2] === 1) why.appendChild(h('p', { text: 'Покажем на осмотре, что осталось от прежнего покрытия. Возможно, хватит меньшего пакета.' }));
     qBody.appendChild(why);
