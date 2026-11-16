@@ -9,10 +9,11 @@
 
   /* ---------- Одно место для данных владельца. Пусто = на странице остаётся жёлтая вставка (INSERTS.md). ---------- */
   var CONFIG = {
-    name: '', phone: '', address: '', owner: '',
-    telegram: '',         // ссылка вида https://t.me/... или https://max.ru/... (В-05); другие адреса игнорируются
+    name: 'АНТИКОРИКА', phone: '', address: '', owner: '',
+    tg: 'https://t.me/Mahortov96',   // личные сообщения Артёму в Telegram (контакты от Артёма, decisions 16.11.2026); пусто = иконка и кнопка ведут на #contacts
+    max: 'https://max.ru/u/f9LHodD0cOIbzAYIX2re7tTws4j62n_qUUeIUeYYHdJiAzpBvtz0WJJWJNA',   // личные сообщения Артёму в Max; пусто = ведут на #contacts
     years: '7',           // срок гарантии, лет (решение владельца 03.11.2026)
-    posts: '7', cars_day: '', hours: '', odor_days: '', callback: '', nearest: '',
+    posts: '7', cars_day: '', hours: '', odor_from: '', odor_to: '', callback: 'в течение 15 минут в рабочее время', nearest: '',
     endpoint: '',         // адрес приёма заявок, https://... (В-61): вебхук подключает агентство; пусто = заявка не уходит
     ymId: 0,              // номер счётчика Яндекс Метрики даст владелец (В-60)
     policyVersion: ''     // версия политики ПД: после появления документа (В-51) записать дату или номер
@@ -23,13 +24,13 @@
 
   /* Вставки в текстах ниже: «ВСТАВКА В-NN: что нужно — от кого» в квадратных скобках; коды и описание — INSERTS.md */
   var PK = {
-    bottom: { name: 'Днище', who: 'Нужна защита днища за минимальные деньги',
-      inc: ['Снятие защиты днища, мойка, сушка, обработка днища ', ['[ВСТАВКА В-13: материал — от Артёма]'], '. Арки и скрытые полости не входят ', ['[ВСТАВКА В-14: уточняется — от Артёма]']],
+    bottom: { name: 'Минимум', note: 'только днище', who: 'Только днище: арки и полости не входят',
+      inc: ['Снятие защиты днища, мойка, сушка, обработка днища ', ['[ВСТАВКА В-13: материал — от Артёма]'], '. Арки и скрытые полости не входят ', ''],
       incShort: 'снятие защиты днища · мойка и сушка · обработка днища. Арки и скрытые полости не входят' },
     standard: { name: 'Стандарт', who: 'Основная защита для большинства машин',
       inc: ['Снятие колёс, подкрылков, защиты; мойка, сушка; днище и арки — ', ['[ВСТАВКА В-13: материал — от Артёма]'], '; скрытые полости — ', ['[ВСТАВКА В-13: материал — от Артёма]']],
       incShort: 'снятие колёс, подкрылков и защиты · мойка и сушка · днище и арки · скрытые полости' },
-    antishum: { name: 'Антишум', who: 'Новая или почти новая машина, хочется меньше шума в салоне',
+    antishum: { name: 'Антишум', who: 'Днище и арки — шумопоглощающим составом',
       inc: ['То же, что «Стандарт», но днище и арки — шумопоглощающим составом ', ['[ВСТАВКА В-13: материал — от Артёма]']],
       incShort: 'снятие колёс, подкрылков и защиты · мойка и сушка · днище и арки шумопоглощающим составом · скрытые полости' },
     zinc: { name: 'Цинк', who: 'Старший пакет: составы с цинком',
@@ -112,12 +113,14 @@
     $$('[data-href]', root).forEach(function (e) {
       var k = e.getAttribute('data-href'), v = '';
       if (k === 'tel') { var d = digits(CONFIG.phone); if (d.length === 11 && d.charAt(0) === '8') d = '7' + d.slice(1); if (d.length >= 10) v = 'tel:+' + d; }
-      else if (k === 'telegram' && /^https:\/\/(t\.me|max\.ru)\//.test(CONFIG.telegram)) v = CONFIG.telegram;
-      if (v) { e.setAttribute('href', v); if (k === 'telegram') { e.setAttribute('target', '_blank'); e.setAttribute('rel', 'noopener'); } }
+      else if (k === 'tg' && /^https:\/\/t\.me\//.test(CONFIG.tg)) v = CONFIG.tg;
+      else if (k === 'max' && /^https:\/\/max\.ru\//.test(CONFIG.max)) v = CONFIG.max;
+      if (v) { e.setAttribute('href', v); if (k === 'tg' || k === 'max') { e.setAttribute('target', '_blank'); e.setAttribute('rel', 'noopener'); } }
     });
     $$('[data-hide-if]', root).forEach(function (e) {
       var k = e.getAttribute('data-hide-if'), v = CONFIG[k];
-      if (k === 'telegram') v = /^https:\/\/(t\.me|max\.ru)\//.test(v);
+      if (k === 'tg') v = /^https:\/\/t\.me\//.test(CONFIG.tg);
+      if (k === 'max') v = /^https:\/\/max\.ru\//.test(CONFIG.max);
       if (k === 'endpoint') v = /^https:\/\//.test(v);
       e.hidden = !!v;
     });
@@ -303,7 +306,7 @@
       var card = h('label', { class: 'pkg' },
         h('input', { type: 'radio', name: 'pkg', value: id }),
         h('span', { class: 'pkg-body' },
-          h('span', { class: 'pkg-name', text: p.name }),
+          h('span', { class: 'pkg-name', text: p.name }, p.note ? h('small', { class: 'pkg-note', text: p.note }) : null),
           h('span', { class: 'pkg-who', text: p.who }),
           incEl,
           h('span', { class: 'pkg-inc' }, 'Срок: ', ['[ВСТАВКА В-11: N часов — от Артёма]', 'hours'], ' ч'),
@@ -429,7 +432,7 @@
     r.appendChild(h('div', { class: 'res-list' },
       h('p', {}, h('b', { text: 'Что входит' }), inc + '.'),
       h('p', {}, h('b', { text: 'Что может изменить цену' }), 'сильная ржавчина, которую надо зачистить до обработки · снятие старого антикора · нестандартная защита или обвес. Об этом скажем на осмотре — до начала работ.'),
-      h('p', {}, h('b', { text: 'Когда цена окончательная' }), 'после осмотра машины в боксе. Записываем её в заказ-наряд, и после этого она не меняется ', ['[ВСТАВКА В-26: подтвердить у Артёма: цена фиксируется в заказ-наряде]'], '.'),
+      h('p', {}, h('b', { text: 'Когда цена окончательная' }), 'после осмотра машины в боксе. Записываем её в заказ-наряд, и после этого она не меняется.'),
       h('p', {}, h('b', { text: 'Гарантия' }), CONFIG.years + ' лет на покрытие в обработанных зонах, при условиях · ', h('a', { href: '#warranty' }, 'условия'))));
     var go = h('button', { class: 'btn', type: 'button', text: 'Записаться с этим расчётом' });
     go.addEventListener('click', function () { el.formWrap.hidden = false; scrollTo(el.formWrap); setTimeout(function () { $('#calc-phone').focus({ preventScroll: true }); }, 350); goal('calc_book'); });
@@ -440,7 +443,7 @@
     sh.addEventListener('click', shareTg);
     r.appendChild(h('div', { class: 'res-btns' }, go, cp, sh, st));
     r.appendChild(h('div', { class: 'res-q' },
-      h('a', { href: '#q-smell' }, 'Запах — ', ['[ВСТАВКА В-19: N дней — от Артёма]', 'odor_days'], ' дней, расскажем, как проветрить'),
+      h('a', { href: '#q-smell' }, 'Запах — от ', ['[ВСТАВКА В-19: N]', 'odor_from'], ' до ', ['[ВСТАВКА В-19: M]', 'odor_to'], ' дней, расскажем, как проветрить'),
       h('a', { href: '#q-cavity' }, 'Полости — список зон по вашей машине'),
       h('a', { href: '#q-conveyor' }, 'Одна машина — один пост на весь день ', ['[ВСТАВКА В-21: подтвердить у Артёма]']),
       h('a', { href: '#q-queue' }, 'Ближайшая запись — ', ['[ВСТАВКА В-09: через N дней / на ближайшие дни — от Артёма]', 'nearest'])));
@@ -468,7 +471,7 @@
     var box = $('#price-table'), pk = D.pkgs;
     if (!HAS_PRICES) { box.appendChild(h('p', { class: 'price-stub' }, [STUB_TABLE])); return; }
     var thead = h('tr', {}, h('th', { scope: 'col', text: 'Класс (примеры моделей)' }));
-    pk.forEach(function (id) { thead.appendChild(h('th', { scope: 'col', text: PK[id].name })); });
+    pk.forEach(function (id) { thead.appendChild(h('th', { scope: 'col', text: PK[id].name }, PK[id].note ? h('small', { text: PK[id].note }) : null)); });
     thead.appendChild(h('th', { scope: 'col', text: '+ шумоизоляция арок' }));
     var tb = h('tbody');
     MAIN_CLASSES.forEach(function (c) {

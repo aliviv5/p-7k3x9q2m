@@ -20,8 +20,9 @@
   --scg-tint-c: #0c0a19ed;         /* снизу, 100 % */
   /* геометрия (значения эталона) */
   --scg-top: 0px;                  /* высота липкой шапки сайта, если она есть */
-  --scg-step: 80vh;                /* прокрутка на одну карточку */
-  --scg-extra: 40vh;               /* прокрутка сверх шагов: выход из блока */
+  --scg-step: 60vh;                /* прокрутка на одну карточку (в эталоне при 6 карточках получается 59vh) */
+  --scg-end: .3;                   /* пауза на последней карточке, в шагах (JS ставит из data-scg-end) */
+  --scg-curtain: 0;                /* доля высоты сцены, на которую наезжает следующий блок (JS ставит из data-scg-curtain) */
   --scg-pin-h: 100vh;              /* высота липкой части */
   --scg-ratio: 1.6;                /* ширина / высота карточки (16:10) */
   --scg-radius: 20px;
@@ -32,15 +33,17 @@
   width: 100%;
   color: var(--scg-ink);
   background: var(--scg-bg);
+  margin-bottom: calc(var(--scg-pin-h) * var(--scg-curtain, 0) * -1);   /* следующий блок поднимается на сцену */
 }
 @supports (height: 100svh) {
   :where(.scg) { --scg-pin-h: calc(100svh - var(--scg-top)); }
 }
 
-/* высокий блок задаёт длину прокрутки: 80vh на карточку + 40vh */
+/* высокий блок задаёт длину прокрутки: высота сцены + шаг на каждую карточку + пауза + «шторка». Последняя карточка стоит по центру, и следующий блок наезжает на сцену снизу
+   (у следующего блока нужны position:relative, z-index:1 и непрозрачный фон): пустого экрана нет */
 .scg__track {
   position: relative;
-  height: calc(var(--scg-step) * var(--scg-n, 4) + var(--scg-extra));
+  height: calc(var(--scg-pin-h) * (1 + var(--scg-curtain, 0)) + var(--scg-step) * (var(--scg-n, 4) - 1 + var(--scg-end, .3) + .06));
 }
 .scg__pin {
   position: sticky;
@@ -347,6 +350,7 @@
 }
 
 /* ---------- статичный режим: reduce-motion (обычный список вместо цилиндра) ---------- */
+.scg--static { margin-bottom: 0; }
 .scg--static .scg__track { height: auto; }
 .scg--static .scg__pin { position: static; height: auto; min-height: 0; overflow: visible; padding: 50px 20px; }
 .scg--static .scg__bg,

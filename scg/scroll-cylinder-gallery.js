@@ -49,7 +49,10 @@
     var dataNode = root.querySelector('script[type="application/json"]');
     var items;
     try { items = JSON.parse(dataNode.textContent); } catch (e) { return; }
-    if (!Array.isArray(items) || items.length < 2) return;
+    if (!Array.isArray(items)) return;
+    /* карточки с "off": true пропускаются (заготовки под кадры, которых ещё нет) */
+    items = items.filter(function (it) { return it && !it.off; });
+    if (items.length < 2) return;
     var n = items.length;
     var ds = root.dataset;
     /* классы подписи из данных — только из белого списка на корне: data-scg-classes="stub other" */
@@ -65,7 +68,9 @@
       ease: num(ds.scgEase, 110.5),           // постоянная сглаживания, мс: 14 % остатка пути за кадр при 60 к/с
       perspective: num(ds.scgPerspective, 1900),
       width: num(ds.scgWidth, 1600),          // исходная ширина картинки (для width/height)
-      height: num(ds.scgHeight, 1000)
+      height: num(ds.scgHeight, 1000),
+      end: Math.min(1, Math.max(0, num(ds.scgEnd, 0.3))),      // пауза после последней карточки, в шагах: она стоит по центру, затем следующий блок наезжает «шторкой»
+      curtain: Math.min(1, Math.max(0, num(ds.scgCurtain, 0)))  // доля высоты сцены, на которую следующий блок наезжает сверху (1 = закрывает сцену целиком)
     };
     var L = {
       skip: ds.scgSkipLabel || 'Пропустить галерею',
@@ -80,6 +85,8 @@
     /* ---------- разметка ---------- */
     var track = make('div', 'scg__track');
     track.style.setProperty('--scg-n', n);
+    track.style.setProperty('--scg-end', cfg.end);
+    root.style.setProperty('--scg-curtain', cfg.curtain);
     var pin = make('div', 'scg__pin');
     var bg = make('div', 'scg__bg');
     bg.setAttribute('aria-hidden', 'true');
@@ -190,6 +197,7 @@
         img.height = cfg.height;
         img.loading = 'lazy';
         img.decoding = 'async';
+        if (/^\d{1,3}% \d{1,3}%$/.test(it.focus || '')) img.style.objectPosition = it.focus;   // главный объект кадра при обрезке
         face.appendChild(img);
       } else {
         face.style.backgroundColor = tone;
@@ -245,7 +253,12 @@
     var raf = 0, last = 0;
     var cardH = 0, stuck = 0, pinH = 0;
     var OVER = 0.06;      // запас в начале: цилиндр стартует чуть выше первой карточки
+    var SPAN = n - 1 + OVER;   // ход цилиндра в карточках: от −0,06 до последней; дальше карточка стоит, а следующий блок наезжает на сцену
 
+    var stepProbe = make('div');
+    stepProbe.setAttribute('aria-hidden', 'true');
+    stepProbe.style.cssText = 'position:absolute;left:0;top:0;width:0;height:var(--scg-step);visibility:hidden;pointer-events:none';
+    root.appendChild(stepProbe);
     function measure() {
       cardH = cards[0].node.offsetHeight;
       pinH = pin.offsetHeight;
@@ -256,9 +269,9 @@
        остаток (до n) уходит на выход из блока: подписи гаснут. */
     function readTarget() {
       var r = track.getBoundingClientRect();
-      var range = r.height - pinH;
-      if (range <= 0) return 0;
-      return clamp(stuck - r.top, 0, range) / range * (n + OVER) - OVER;
+      var range = stepProbe.offsetHeight * SPAN;   // прокрутка, за которую цилиндр доходит до последней карточки
+      if (range <= 0 || r.height <= pinH) return 0;
+      return clamp(stuck - r.top, 0, range) / range * SPAN - OVER;
     }
 
     function setActive(i) {
@@ -320,7 +333,7 @@
           bl.style.transform = 'translateY(' + (rel * 22).toFixed(2) + '%) scale(1.6)';
         }
       }
-      var outro = clamp((pos - (n - 1) - 0.15) / 0.75, 0, 1);
+      var outro = 0;   // подписи не гаснут: на последней карточке сцену закрывает следующий блок
       for (var k = 0; k < fades.length; k++) {
         fades[k].style.opacity = (1 - outro).toFixed(3);
         fades[k].style.pointerEvents = outro > 0.8 ? 'none' : '';
@@ -375,8 +388,7 @@
       clearTimeout(goalTimer);
       goalTimer = setTimeout(function () { goal = null; }, 1200);
       var r = track.getBoundingClientRect();
-      var range = r.height - pinH;
-      var top = window.pageYOffset + r.top - stuck + (i + OVER) / (n + OVER) * range;
+      var top = window.pageYOffset + r.top - stuck + (i + OVER) * stepProbe.offsetHeight;
       window.scrollTo({ top: top, behavior: 'smooth' });
     }
     function dropGoal() {
