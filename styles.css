@@ -632,14 +632,14 @@ input[type=text]:focus-visible,input[type=tel]:focus-visible,select:focus-visibl
 }
 
 /* п.7: свечение карточек (как «card with glow», ibelick / Motion Primitives, MIT; свой код). Только на тёмных блоках.
-   Размытый слой ЗА карточкой выходит за её края на --s3, размытие --s4; цвета медленно «колышутся» (поворот градиента, transform),
+   Размытый слой ЗА карточкой: единый вынос 6 px и размытие 6 px; цвета медленно «колышутся» (поворот градиента, transform),
    при наведении мыши слой сдвигается к курсору (app.js). Анимация идёт только у карточек в окне; reduced-motion — статично. */
 .glow-fx{position:absolute;inset:calc(var(--fx-out,var(--s3)) * -1);z-index:-1;border-radius:calc(var(--r-lg) + var(--fx-out,var(--s3)));overflow:hidden;pointer-events:none;opacity:var(--fx-op,.34);filter:blur(var(--fx-blur,var(--s3)));transform:translate3d(var(--gx,0px),var(--gy,0px),0);transition:transform .35s ease-out,opacity .35s}
 .glow-fx::before{content:"";position:absolute;left:50%;top:50%;width:260%;aspect-ratio:1;background:conic-gradient(from 0deg,#F57135 0,#8C3410 18%,#FFB347 40%,#C8501C 62%,#FF8A4C 82%,#F57135 100%);transform:translate(-50%,-50%) rotate(0deg);animation:glow-spin 18s linear infinite;animation-play-state:paused}
 .glow.is-vis .glow-fx::before{animation-play-state:running;will-change:transform}
 @keyframes glow-spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
 .sec:not(.light) .glow{border-color:rgba(245,113,53,.35)}
-.why .glow{--fx-out:calc(var(--s1) * 1.5);--fx-blur:6px;--fx-op:.55}   /* D2: вынос и размытие вдвое меньше (было 12 и 12 px), свечение чётче */
+.glow{--fx-out:calc(var(--s1) * 1.5);--fx-blur:6px;--fx-op:.55}   /* Единый стандарт всех карточек: параметры блока «Зачем делать антикор». */
 .light .glow-fx{display:none}   /* на белом свечения нет: тень карточки */
 @media (hover:hover){.glow:hover>.glow-fx{opacity:calc(var(--fx-op,.34) + .26)}}
 @media (prefers-reduced-motion:reduce){
