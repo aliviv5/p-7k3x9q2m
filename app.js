@@ -290,7 +290,6 @@
 
   function buildCalc() {
     el.pkgGrid = $('#pkg-grid'); el.arches = $('#arches'); el.archesPrice = $('#arches-price'); el.archesStub = $('#arches-stub'); el.archesOff = $('#arches-off');
-    el.classbox = $('#classbox'); el.className = $('#class-name'); el.classSil = $('#class-sil'); el.classNote = $('#class-note');
     el.custom = $('#custom'); el.customText = $('#custom-text'); el.silGrid = $('#sil-grid');
     el.resBody = $('#result-body'); el.formWrap = $('#calc-form-wrap');
 
@@ -379,21 +378,6 @@
     if (!keepFocus && el.customText.value !== S.customText) el.customText.value = S.customText;
     $$('input', el.silGrid).forEach(function (i) { i.checked = i.value === S.customCls; });
 
-    el.classbox.hidden = !cls;
-    if (cls) {
-      var c = classByCode[cls];
-      clear(el.className);
-      el.className.appendChild(document.createTextNode(c.name));
-      if (c.special) { el.className.appendChild(document.createTextNode(' ')); add(el.className, ['[ВСТАВКА В-24: название класса — уточняется]']); }
-      el.classSil.src = 'img/' + (m && m.v ? m.v : c.sil) + '.svg'; /* силуэт по типу кузова модели, если он известен (build_data.py), иначе силуэт класса */
-      el.classSil.alt = 'Силуэт автомобиля: ' + c.name;
-      var note = '';
-      if (S.custom) note = 'Проверим класс по вашей модели и подтвердим цену при звонке';
-      else if (m && m.d === 2) note = 'Класс уточним: в нашей таблице он вызывает сомнения; подтвердим по вашей машине до начала работ';
-      else if (m && m.d) note = 'Класс уточним: у этой модели возможны два варианта, показан старший, чтобы цена на осмотре не выросла';
-      el.classNote.textContent = note; el.classNote.hidden = !note;
-    }
-
     $$('[data-price]', el.pkgGrid).forEach(function (p) {
       var id = p.getAttribute('data-price'), v = cls ? priceOf(id, cls) : null;
       clear(p);
@@ -418,6 +402,20 @@
     syncUrl();
   }
 
+  /* Пометка про класс (раньше стояла в отдельном блоке «Класс вашей машины», его в калькуляторе больше нет, 16.11.2026):
+     класс по модели определяется как прежде, а оговорку про сомнительный класс покупатель видит в итоге расчёта */
+  function classNote() {
+    var m = curModel();
+    if (S.custom) return 'Проверим класс по вашей модели и подтвердим цену при звонке';
+    if (m && m.d === 2) return 'Класс уточним: в нашей таблице он вызывает сомнения; подтвердим по вашей машине до начала работ';
+    if (m && m.d) return 'Класс уточним: у этой модели возможны два варианта, показан старший, чтобы цена на осмотре не выросла';
+    return '';
+  }
+  /* Раскрывающийся пункт итога: свёрнут по умолчанию, «+» справа */
+  function fold(title, body) {
+    var d = h('details', { class: 'res-fold' }, h('summary', { text: title }), body);
+    return d;
+  }
   function renderResult() {
     var cls = curClass(), r = el.resBody;
     clear(r);
@@ -429,11 +427,13 @@
     else if (t == null) r.appendChild(h('p', { class: 'res-price na', text: 'Цену назовём при звонке' }));
     else r.appendChild(h('p', { class: 'res-price' }, rub(t)));
     if (HAS_PRICES) goal('calc_price_shown');
+    var cn = classNote();
+    if (cn) r.appendChild(h('p', { class: 'hint res-note', id: 'class-note', text: cn }));
     r.appendChild(h('div', { class: 'res-list' },
-      h('p', {}, h('b', { text: 'Что входит' }), inc + '.'),
-      h('p', {}, h('b', { text: 'Что может изменить цену' }), 'сильная ржавчина, которую надо зачистить до обработки · снятие старого антикора · нестандартная защита или обвес. Об этом скажем на осмотре — до начала работ.'),
-      h('p', {}, h('b', { text: 'Когда цена окончательная' }), 'после осмотра машины в боксе. Записываем её в заказ-наряд, и после этого она не меняется.'),
-      h('p', {}, h('b', { text: 'Гарантия' }), CONFIG.years + ' лет на покрытие в обработанных зонах, при условиях · ', h('a', { href: '#warranty' }, 'условия'))));
+      fold('Что входит', h('p', { text: inc + '.' })),
+      fold('Что может изменить цену', h('p', { text: 'сильная ржавчина, которую надо зачистить до обработки · снятие старого антикора · нестандартная защита или обвес. Об этом скажем на осмотре — до начала работ.' })),
+      fold('Когда цена окончательная', h('p', { text: 'после осмотра машины в боксе. Записываем её в заказ-наряд, и после этого она не меняется.' })),
+      fold('Гарантия', h('p', {}, CONFIG.years + '\u00a0лет на покрытие в обработанных зонах, при условиях · ', h('a', { href: '#warranty' }, 'условия')))));
     var go = h('button', { class: 'btn', type: 'button', text: 'Записаться с этим расчётом' });
     go.addEventListener('click', function () { el.formWrap.hidden = false; scrollTo(el.formWrap); setTimeout(function () { $('#calc-phone').focus({ preventScroll: true }); }, 350); goal('calc_book'); });
     var cp = h('button', { class: 'btn btn-ghost', type: 'button', text: 'Скопировать ссылку на расчёт' });
@@ -801,7 +801,7 @@
     initCookie();
     applyCfg(document);
     if (fromUrl) setTimeout(function () { scrollTo($('#calc')); }, 50);
-    window.AK = { data: D, total: total, priceOf: priceOf, archesOf: archesOf, state: S, quiz: Q, goals: goals, config: CONFIG };
+    window.AK = { data: D, curClass: curClass, total: total, priceOf: priceOf, archesOf: archesOf, state: S, quiz: Q, goals: goals, config: CONFIG };
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
@@ -841,5 +841,60 @@
       if (el && el.tagName === 'DETAILS') el.open = true;
     });
     openHash();
+  });
+})();
+
+/* v4, проход 2 (16.11.2026): свечение карточек и липкая кнопка. Без библиотек, без сети.
+   Свечение: к каждой карточке [data-glow] добавляется слой .glow-fx (стили и анимация — в styles.css). Здесь: запуск анимации только у карточек в окне,
+   у мыши (hover:hover) — смещение слоя к курсору через requestAnimationFrame; при prefers-reduced-motion слой статичный. */
+(function () {
+  function ready(fn) { if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
+  ready(function () {
+    if (document.documentElement.getAttribute('data-glow-ready')) return;   /* повторный запуск не плодит слои и обработчики */
+    document.documentElement.setAttribute('data-glow-ready', '1');
+    var cards = document.querySelectorAll('[data-glow]');
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var hoverOk = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+    var MAX = 10;   /* на сколько пикселей слой уходит к курсору */
+    var io = null;
+    if ('IntersectionObserver' in window && !reduce) {
+      io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { e.target.classList.toggle('is-vis', e.isIntersecting); });
+      }, { rootMargin: '80px 0px' });
+    }
+    Array.prototype.forEach.call(cards, function (card) {
+      var fx = document.createElement('span');
+      fx.className = 'glow-fx';
+      fx.setAttribute('aria-hidden', 'true');
+      card.insertBefore(fx, card.firstChild);
+      if (io) io.observe(card);
+      if (reduce || !hoverOk) return;
+      var raf = 0, px = 0, py = 0;
+      function apply() {
+        raf = 0;
+        var r = card.getBoundingClientRect();
+        var nx = Math.max(-1, Math.min(1, (px - r.left) / (r.width || 1) * 2 - 1));
+        var ny = Math.max(-1, Math.min(1, (py - r.top) / (r.height || 1) * 2 - 1));
+        card.style.setProperty('--gx', (nx * MAX).toFixed(1) + 'px');
+        card.style.setProperty('--gy', (ny * MAX).toFixed(1) + 'px');
+      }
+      card.addEventListener('pointermove', function (e) {
+        if (e.pointerType && e.pointerType !== 'mouse') return;
+        px = e.clientX; py = e.clientY;
+        if (!raf) raf = requestAnimationFrame(apply);
+      });
+      card.addEventListener('pointerleave', function () {
+        if (raf) { cancelAnimationFrame(raf); raf = 0; }
+        card.style.setProperty('--gx', '0px'); card.style.setProperty('--gy', '0px');
+      });
+    });
+
+    /* липкая нижняя кнопка «Рассчитать цену» не нужна, пока на экране сам калькулятор */
+    var dock = document.querySelector('.dock'), calc = document.getElementById('calc');
+    if (dock && calc && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) {
+        dock.classList.toggle('is-away', es[0].isIntersecting);
+      }).observe(calc);
+    }
   });
 })();

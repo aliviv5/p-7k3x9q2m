@@ -30,10 +30,10 @@
       <span class="ic-cap"><span class="cap-d stub" data-cfg="phone">[ВСТАВКА В-04: телефон]</span></span>
     </a>
     <a class="hdr-ic hdr-msg" id="hdr-tg" aria-label="Написать в Telegram" href="#contacts" data-href="tg" data-goal="click_telegram">
-      <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M21.5 3.5 2.8 10.7c-.9.35-.9 1.6 0 1.9l4.7 1.5 1.8 5.6c.25.75 1.2.95 1.7.35l2.6-2.9 4.8 3.5c.65.45 1.55.1 1.75-.7L23 5.1c.2-.95-.7-1.9-1.5-1.6zM9.5 13.8l9-6.3-7 7.6-.4 3-1.6-4.3z"/></svg>
+      <img src="img/telegram.svg" width="28" height="28" alt="" decoding="async">
     </a>
     <a class="hdr-ic hdr-msg" id="hdr-max" aria-label="Написать в Max" href="#contacts" data-href="max" data-goal="click_max">
-      <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7.5 16.2V8.4l4.5 5.2 4.5-5.2v7.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <img src="img/max-logo.webp" width="28" height="28" alt="" decoding="async">
     </a>
     <a class="btn btn-sm btn-ghost" href="#calc" data-goal="click_calc_header">Рассчитать цену</a>
   </div>
@@ -50,8 +50,8 @@
   <div class="wrap hero-in">
     <div class="hero-text">
       <p class="eyebrow">Антикоррозийная обработка автомобиля в Москве</p>
-      <h1 id="h1">Антикор автомобиля <span class="hl">с письменной гарантией 7 лет<a class="fn" href="#warranty" aria-label="Условия гарантии">*</a></span></h1>
-      <p class="hero-price">Минимум (днище) — от 14 300 ₽ · Комплекс — от 40 700 ₽ · фотоотчёт каждого этапа</p>
+      <h1 id="h1">Антикор автомобиля <span class="hl">с письменной гарантией 7 лет</span></h1>
+      <p class="hero-price">Минимум (днище) — от 14 300 ₽ · Стандарт — от 40 700 ₽ · Фотоотчёт каждого этапа</p>
       <p class="lead">Выберите марку и модель — сразу покажем цену защиты авто от коррозии.</p>
       <div class="hero-actions">
         <a class="btn btn-arrow" href="#pick" data-goal="click_calc_hero">Рассчитать цену</a>
@@ -62,26 +62,26 @@
 </section>
 
 <!-- Полоса преимуществ: подписи собраны из трёх строк под первым экраном прототипа (7 постов и часы, цена до звонка, гарантия 7 лет); формулировки утверждает Анна, см. INSERTS.md, В-66 -->
-<section class="strip" aria-label="Коротко о нас">
+<section class="strip light" aria-label="Коротко о нас">
   <div class="wrap">
     <ul class="facts">
       <li><svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg><p><strong>Письменная гарантия 7 лет</strong><span>в заказ-наряде · <a href="#warranty">условия</a></span></p></li>
-      <li><svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><p><strong>Фотоотчёт работ</strong></p></li>
+      <li><svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><p><strong>Фотоотчёт работ</strong><span>Каждый этап отправляем в мессенджер</span></p></li>
       <li><svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><p><strong>7 постов</strong><span>каждый день 9:00–21:00</span></p></li>
     </ul>
   </div>
 </section>
 
 <!-- Блок «Зачем делать антикор» (v3, 16.11.2026): тексты Анны, texts-v3.md, раздел 2; после полосы преимуществ. Факты — из открытых источников (07-usp §5), «эксперты советуют» — мнение, не гарантия. -->
-<section class="sec dark bg-glow why" id="why" aria-labelledby="why-h">
+<section class="sec dark why" id="why" aria-labelledby="why-h">
   <div class="wrap">
     <h2 id="why-h">Зачем делать антикор</h2>
     <p class="sub">Коротко: от чего защищает обработка и когда её делать.</p>
     <div class="why-grid">
-      <article class="why-card"><h3>Заводская защита не вечна</h3><p>Цинк со временем истончается, а скрытые полости с завода заполнены не всегда. У части машин защиты хватает лишь на гарантийный срок.</p></article>
-      <article class="why-card"><h3>Зимой дороги посыпают солями</h3><p>В противогололёдных составах часто хлориды натрия, кальция и магния. Соль ускоряет коррозию, а в Москве реагенты применяют ещё до снега.</p></article>
-      <article class="why-card"><h3>Ржавеет там, куда не заглянешь</h3><p>Сварные швы, низ дверей, арки, стыки — на мойке их не видно. Поэтому полная обработка — это днище, арки и скрытые полости.</p></article>
-      <article class="why-card"><h3>Когда делать — зависит от машины</h3><p>Эксперты советуют: ВАЗ, УАЗ и китайским машинам — сразу, японским и корейским — через 3 года, немецким — через 5. Подскажем для вашей.</p></article>
+      <article class="why-card glow" data-glow><h3>Заводская защита не вечна</h3><ul class="why-list"><li>Цинк со временем истончается</li><li>Скрытые полости с завода заполнены не всегда</li><li>Защита части машин — лишь на гарантийный срок</li></ul></article>
+      <article class="why-card glow" data-glow><h3>Зимой дороги посыпают солями</h3><ul class="why-list"><li>В реагентах часто хлориды натрия, кальция, магния</li><li>Соль ускоряет коррозию</li><li>В Москве реагенты применяют ещё до снега</li></ul></article>
+      <article class="why-card glow" data-glow><h3>Ржавеет там, куда не заглянешь</h3><ul class="why-list"><li>Сварные швы, низ дверей, арки, стыки</li><li>На мойке их не видно</li><li>Полная обработка — днище, арки и скрытые полости</li></ul></article>
+      <article class="why-card glow" data-glow><h3>Когда делать — зависит от машины</h3><p class="why-intro">Эксперты советуют:</p><ul class="why-list"><li>ВАЗ, УАЗ и китайским машинам — сразу</li><li>Японским и корейским — через 3 года</li><li>Немецким — через 5 лет</li></ul><p class="why-foot">Подскажем для вашей машины.</p></article>
     </div>
     <div class="why-cta">
       <p>Сколько это стоит для вашей машины — покажем по марке и модели.</p>
@@ -91,7 +91,7 @@
 </section>
 
 <!-- Блок «Подберите защиту»: марка, модель, кнопка (форма и логика прежние: #hero-form, #hero-example, #hero-nomodel) -->
-<section class="sec light pick bg-warm" id="pick" aria-labelledby="pick-h">
+<section class="sec dark d2 pick" id="pick" aria-labelledby="pick-h">
   <div class="wrap pick-in">
     <div class="pick-head">
     <h2 id="pick-h">Цена антикора для вашего авто</h2>
@@ -117,7 +117,7 @@
 
 <!-- Блок «Как проходит обработка»: галерея «барабан» (scg/, компонент templates/components/scroll-cylinder-gallery).
      v3 (16.11.2026): 6 этапов по решению владельца (сушка и укрытие — один этап), кадры Льва Давыдовича из v3-assets, подписи Анны (texts-v3.md, раздел 3; этап 03 — подпись директора). После последней карточки сцена отпускается сразу (data-scg-end). -->
-<section class="sec dark process" id="process" aria-labelledby="process-h">
+<section class="sec light process" id="process" aria-labelledby="process-h">
   <div class="wrap">
     <h2 id="process-h">Как проходит антикоррозийная обработка</h2>
     <p class="sub">Этапы — от осмотра на подъёмнике до выдачи машины.</p>
@@ -129,7 +129,7 @@
     {"title": "02. Мойка днища", "text": "Отмываем днище и арки от грязи и соли: состав наносим только на чистую поверхность.", "image": "img/step-2-wash.webp", "srcset": "img/step-2-wash-800.webp 800w, img/step-2-wash.webp 1200w", "thumb": "img/step-2-wash-800.webp", "alt": "Мастер под машиной на подъёмнике моет днище пистолетом высокого давления, слева аппарат со шлангом"},
     {"title": "03. Сушка и укрытие", "text": "Сушим днище, закрываем тормоза и кузов плёнкой — состав не попадёт на краску.", "image": "img/step-3-dry-mask.webp", "srcset": "img/step-3-dry-mask-800.webp 800w, img/step-3-dry-mask.webp 1200w", "thumb": "img/step-3-dry-mask-800.webp", "alt": "Мастер укрывает тормозной диск и суппорт при снятом колесе, низ кузова у арки закрыт плёнкой"},
     {"title": "04. Днище и арки", "text": "Наносим состав на днище и в арки, отдельно проходим швы и кромки — там ржавчина обычно и начинается.", "image": "img/step-5-underbody.webp", "srcset": "img/step-5-underbody-800.webp 800w, img/step-5-underbody.webp 1200w", "thumb": "img/step-5-underbody-800.webp", "alt": "Мастер в респираторе снизу распыляет состав на днище машины на подъёмнике: колёса сняты, тормоза и кузов закрыты плёнкой"},
-    {"title": "05. Скрытые полости", "text": "Пороги и низ дверей обрабатываем изнутри: подаём состав насадкой через технологические отверстия.", "image": "img/step-6-cavities.webp", "srcset": "img/step-6-cavities-800.webp 800w, img/step-6-cavities.webp 1200w", "thumb": "img/step-6-cavities-800.webp", "alt": "Мастер снизу вводит зонд пистолета в технологическое отверстие днища; тормоза и кузов закрыты плёнкой"},
+    {"title": "05. Скрытые полости", "text": "Пороги и низ дверей обрабатываем изнутри: подаём состав насадкой через технологические отверстия.", "image": "img/step-6-cavities.webp", "srcset": "img/step-6-cavities-800.webp 800w, img/step-6-cavities.webp 1200w", "thumb": "img/step-6-cavities-800.webp", "alt": "Мастер в наушниках снизу распыляет состав пистолетом на днище машины на подъёмнике; колёса и кузов закрыты плёнкой"},
     {"title": "06. Контроль и выдача", "text": "Собираем, проверяем крепёж и показываем обработанные зоны. Гарантия 7 лет — письменно, в заказ-наряде.", "image": "img/step-7-delivery.webp", "srcset": "img/step-7-delivery-800.webp 800w, img/step-7-delivery.webp 1200w", "thumb": "img/step-7-delivery-800.webp", "alt": "Чистый кроссовер на полу бокса, мастер с планшетом рядом после обработки"}
   ]
     </script>
@@ -138,7 +138,7 @@
 
 <!-- Блок «До и после» (v3): шторка (ba/, компонент templates/components/before-after). Кадры Льва Давыдовича из v3-assets (тёмные пары: днище, арка, порог).
      Пометок про сгенерированные кадры не ставим (решение владельца 16.11.2026); к боевому сайту кадры заменить реальными фото из бокса. Заголовок и подписи — Анна (texts-v3.md, раздел 4). -->
-<section class="sec dark bg-glow ba-sec" id="beforeafter" aria-labelledby="ba-h">
+<section class="sec light ba-sec" id="beforeafter" aria-labelledby="ba-h">
   <div class="wrap">
     <h2 id="ba-h">До и после антикора: днище, арка, порог</h2>
     <p class="sub">Слева — металл после нескольких зим с реагентами, справа — после обработки. Потяните ползунок.</p>
@@ -202,22 +202,13 @@
           <button class="link" type="button" id="custom-back">Вернуться к выбору из списка</button>
         </div>
 
-        <div class="classbox" id="classbox" hidden>
-          <img id="class-sil" width="800" height="450" alt="" loading="lazy" decoding="async">
-          <div>
-            <p class="classline">Класс вашей машины: <strong id="class-name"></strong></p>
-            <p class="hint">Класс зависит от размера днища: чем больше площадь, тем больше состава и работы</p>
-            <p class="hint" id="class-note" hidden></p>
-          </div>
-        </div>
-
         <fieldset class="pkgs" id="pkgs">
           <legend>3. Что обрабатываем</legend>
           <button class="link pkg-toggle" type="button" id="pkg-toggle" aria-expanded="false" aria-controls="pkg-grid">Показать состав пакетов</button>
           <div class="pkg-grid" id="pkg-grid"></div>
         </fieldset>
 
-        <div class="arches">
+        <div class="arches" id="arches-box">
           <label class="switch" for="arches">
             <input type="checkbox" id="arches" role="switch" aria-describedby="arches-h">
             <span class="sw-box" aria-hidden="true"></span>
@@ -231,7 +222,7 @@
         </div>
       </div>
 
-      <aside class="calc-result" id="result" aria-live="polite" aria-labelledby="result-h">
+      <aside class="calc-result glow" data-glow id="result" aria-live="polite" aria-labelledby="result-h">
         <h3 id="result-h" class="vh">Итог расчёта</h3>
         <div id="result-body"></div>
         <div class="lead-form" id="calc-form-wrap" hidden>
@@ -243,6 +234,7 @@
             <fieldset class="radios"><legend>Как удобнее связаться</legend>
               <label class="rad"><input type="radio" name="contact_method" value="звонок" checked><span>Звонок</span></label>
               <label class="rad"><input type="radio" name="contact_method" value="Telegram"><span>Telegram</span></label>
+              <label class="rad"><input type="radio" name="contact_method" value="Max"><span>Max</span></label>
             </fieldset>
             <details class="more">
               <summary>Уточнить для точной цены <span class="opt">необязательно</span></summary>
@@ -262,7 +254,7 @@
 </section>
 
 <!-- Блок 3. Пакеты и цены по классам -->
-<section class="sec light bg-warm" id="prices" aria-labelledby="prices-h">
+<section class="sec light" id="prices" aria-labelledby="prices-h">
   <div class="wrap">
     <h2 id="prices-h">Цены на антикор по классам</h2>
     <p class="sub">Цена зависит от размера машины и пакета.</p>
@@ -272,7 +264,7 @@
 </section>
 
 <!-- Блок 6. Сравнение: чек-лист -->
-<section class="sec light" id="compare" aria-labelledby="cmp-h">
+<section class="sec dark d3" id="compare" aria-labelledby="cmp-h">
   <div class="wrap">
     <div class="head-split">
       <div>
@@ -307,7 +299,7 @@
 </section>
 
 <!-- Блок 7. Гарантия -->
-<section class="sec dark bg-w" id="warranty" aria-labelledby="w-h">
+<section class="sec light" id="warranty" aria-labelledby="w-h">
   <div class="wrap">
     <div class="head-split">
       <div>
@@ -320,7 +312,7 @@
       <summary>Показать условия по пунктам</summary>
     <div class="wgrid" role="region" aria-label="Условия гарантии, листайте вбок" tabindex="0">
       <article><h3>Что покрывает</h3>
-        <p>7 лет с даты заказ-наряда <span class="stub">[ВСТАВКА В-40: согласовать с Артёмом]</span>, в зонах, которые мы обработали. Они записаны в заказ-наряде.</p>
+        <p>7 лет со дня выдачи машины <span class="stub">[ВСТАВКА В-40: согласовать с Артёмом]</span>, в зонах, которые мы обработали. Они записаны в заказ-наряде.</p>
         <ul>
           <li>Покрытие отслоилось или в нём нашёлся пропуск.</li>
           <li>Появилась коррозия, и причина — дефект нашей обработки.</li>
@@ -348,12 +340,12 @@
   </div>
 </section>
 <!-- Блок 8. Квиз -->
-<section class="sec light bg-glow" id="quiz" aria-labelledby="quiz-h">
+<section class="sec dark d2" id="quiz" aria-labelledby="quiz-h">
   <div class="wrap">
     <h2 id="quiz-h">Не знаете, какой пакет выбрать?</h2>
     <p class="sub">Четыре вопроса — подскажем пакет и цену для вашей машины.</p>
     <figure class="aside-pic"><img src="img/aside-quiz.webp" srcset="img/aside-quiz-600.webp 600w, img/aside-quiz.webp 1200w" sizes="(min-width:900px) 480px, 92vw" width="1200" height="900" loading="lazy" decoding="async" alt="Мастер с планшетом у серого кроссовера на подъёмнике в боксе"></figure>
-    <div class="quiz" id="quiz-box" aria-live="polite">
+    <div class="quiz glow" data-glow id="quiz-box" aria-live="polite">
       <div id="quiz-body"></div>
     </div>
   </div>
@@ -369,7 +361,7 @@
 </section>
 
 <!-- Блок 10. Вопросы и ответы -->
-<section class="sec light bg-warm" id="faq" aria-labelledby="faq-h">
+<section class="sec light" id="faq" aria-labelledby="faq-h">
   <div class="wrap measure">
     <h2 id="faq-h">Частые вопросы об антикоре</h2>
     <figure class="aside-pic"><img src="img/aside-faq.webp" srcset="img/aside-faq-600.webp 600w, img/aside-faq.webp 1200w" sizes="(min-width:900px) 480px, 92vw" width="1200" height="900" loading="lazy" decoding="async" alt="Белый кроссовер на подъёмнике в боксе, вид спереди"></figure>
@@ -377,7 +369,7 @@
     <details id="q-cavity"><summary>Не пропустите полости?</summary><p>Перед работой показываем список зон для вашей машины.</p></details>
     <details id="q-conveyor"><summary>Это не конвейер?</summary><p>На одном посту — одна машина на весь день: 7 постов, <span class="stub" data-cfg="cars_day">[ВСТАВКА В-10: N машин в день — от Артёма]</span> машин в день. Спешить, чтобы освободить место, не нужно. <span class="stub">[ВСТАВКА В-21: формулировка уточняется — от Артёма]</span></p></details>
     <details id="q-queue"><summary>Долго ждать записи?</summary><p><span class="stub" data-cfg="nearest">[ВСТАВКА В-09: ближайшая свободная дата — в форме записи / обычно через N дней — от Артёма]</span>. 7 постов, работаем каждый день с 9:00 до 21:00.</p></details>
-    <details id="q-notapply"><summary>Куда состав не наносят?</summary><p>Закрываем <span class="stub">[ВСТАВКА В-18: тормозные механизмы, штоки амортизаторов, выхлоп, датчики — по техкарте Артёма]</span></p></details>
+    <details id="q-notapply"><summary>Куда состав не наносят?</summary><p>Закрываем <span class="stub">[ВСТАВКА В-18: тормозные механизмы, штоки амортизаторов, датчики — по техкарте Артёма]</span></p></details>
     <details><summary>Сколько времени занимает обработка?</summary><p><span class="stub" data-cfg="hours">[ВСТАВКА В-11: N часов — от Артёма]</span> часов. Машину <span class="stub">[ВСТАВКА В-12: оставляете утром — забираете вечером того же дня — от Артёма]</span> <span class="stub">[ВСТАВКА В-12: подтвердить у Артёма]</span>.</p></details>
     <details><summary>Нужно ли мыть машину перед приездом?</summary><p><span class="stub">[ВСТАВКА В-27: Нет, мойка днища входит в пакет / Да, ... — ответ Артёма]</span> <span class="stub">[ВСТАВКА В-27: в этапах работ и в составе пакетов написано «моем и сушим» — ответ должен совпасть]</span></p></details>
     <details><summary>Нужен ли антикор новой машине?</summary><p>Заводская защита обычно закрывает не все зоны: скрытые полости и швы часто остаются без состава. Покажем на подъёмнике, что есть на вашей машине, — тогда решите. <span class="stub">[ВСТАВКА В-25: формулировка уточняется — от Артёма]</span></p></details>
@@ -390,16 +382,16 @@
 </section>
 
 <!-- Блок 11. Контакты и короткая форма -->
-<section class="sec cta bg-glow" id="contacts" aria-labelledby="c-h">
+<section class="sec dark d3 cta" id="contacts" aria-labelledby="c-h">
   <div class="wrap contacts">
     <div>
       <h2 id="c-h">Приезжайте на осмотр</h2>
       <p><span class="stub" data-cfg="address">[ВСТАВКА В-02: адрес — от Артёма]</span>, <span class="stub">[ВСТАВКА В-03: как проехать: метро, въезд, парковка — от Артёма]</span>. Каждый день с 9:00 до 21:00.</p>
       <p><span class="stub" data-cfg="phone">[ВСТАВКА В-04: телефон — от Артёма]</span></p>
-      <p class="msg-btns"><a class="btn btn-tg" href="#contacts" id="tg-link" data-href="tg" data-goal="click_telegram">Написать в Telegram</a> <a class="btn btn-max" href="#contacts" id="max-link" data-href="max" data-goal="click_max">Написать в Max</a></p>
+      <p class="msg-btns"><a class="btn btn-tg" href="#contacts" id="tg-link" data-href="tg" data-goal="click_telegram"><img class="msg-ic" src="img/telegram.svg" width="32" height="32" alt="" loading="lazy" decoding="async">Написать в Telegram</a> <a class="btn btn-max" href="#contacts" id="max-link" data-href="max" data-goal="click_max"><img class="msg-ic" src="img/max-logo.webp" width="32" height="32" alt="" loading="lazy" decoding="async">Написать в Max</a></p>
       <div class="map" role="img" aria-label="Место для карты Яндекса с точкой бокса"><span class="stub">[ВСТАВКА В-06: карта Яндекса с точкой бокса — ссылкой по нажатию, без встроенного виджета — адрес бокса от Артёма]</span></div>
     </div>
-    <form id="contact-form" class="lead-form" method="dialog" novalidate>
+    <form id="contact-form" class="lead-form glow" data-glow method="dialog" novalidate>
       <div class="field"><label for="c-phone">Телефон <span class="req">обязательно</span></label><input id="c-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 ___ ___-__-__" required aria-describedby="c-phone-e"><p class="err" id="c-phone-e" hidden></p></div>
       <div class="consent"></div>
       <button class="btn" type="submit" disabled>Перезвоните мне</button>
@@ -413,16 +405,16 @@
 <footer class="ftr">
   <div class="wrap">
     <p><span class="stub">[ВСТАВКА В-54: ИП / ООО «...» — реквизиты оператора, от Артёма]</span>, ИНН <span class="stub">[ВСТАВКА В-55: ИНН — от Артёма]</span>, ОГРН(ИП) <span class="stub">[ВСТАВКА В-56: ОГРН / ОГРНИП — от Артёма]</span>, <span class="stub">[ВСТАВКА В-57: юридический адрес — от Артёма]</span></p>
-    <ul class="ftr-links"><li><a href="privacy.html" target="_blank" rel="noopener">Политика обработки персональных данных</a></li><li><a href="soglasie.html" target="_blank" rel="noopener">Согласие на обработку персональных данных</a></li><li><a href="garantiya.html" target="_blank" rel="noopener">Условия гарантии</a></li></ul>
+    <ul class="ftr-links"><li><a href="privacy.html" target="_blank" rel="noopener">Политика обработки персональных данных</a></li><li><a href="soglasie.html" target="_blank" rel="noopener">Согласие на обработку персональных данных</a></li><li hidden><a href="garantiya.html" target="_blank" rel="noopener">Условия гарантии</a></li><!-- скрыто, пока на garantiya.html вставка В-53 --></ul>
     <p>Цена на сайте предварительная; окончательная фиксируется в заказ-наряде после осмотра автомобиля.</p>
     <p class="ftr-brand"><img src="img/logo-antikorika.webp" width="988" height="69" alt="АНТИКОРИКА" loading="lazy" decoding="async"><span>© 2026 АНТИКОРИКА</span></p>
   </div>
 </footer>
 
-<a class="dock btn" href="#contacts" data-goal="click_dock"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.6a1 1 0 0 1-.25 1z"/></svg>Записаться</a>
+<a class="dock btn btn-arrow" href="#calc" data-goal="click_calc_dock">Рассчитать цену</a>
 
 <div class="cookie" id="cookie" role="region" aria-label="Файлы cookie" hidden>
-  <p>Мы используем cookie и Яндекс Метрику, чтобы сайт работал и мы понимали, какие разделы полезны. <a href="privacy.html" target="_blank" rel="noopener">Подробнее</a></p>
+  <p>Мы используем файлы cookie, чтобы сайт работал. <a href="privacy.html" target="_blank" rel="noopener">Подробнее</a></p>
   <button class="btn btn-sm" type="button" id="cookie-ok">Понятно</button>
 </div>
 
@@ -457,6 +449,7 @@
     <fieldset class="radios"><legend>Как удобнее связаться</legend>
       <label class="rad"><input type="radio" name="contact_method" value="звонок" checked><span>Звонок</span></label>
       <label class="rad"><input type="radio" name="contact_method" value="Telegram"><span>Telegram</span></label>
+              <label class="rad"><input type="radio" name="contact_method" value="Max"><span>Max</span></label>
     </fieldset>
     <div class="consent"></div>
     <button class="btn" type="submit" disabled>Получить расчёт и записаться</button>
