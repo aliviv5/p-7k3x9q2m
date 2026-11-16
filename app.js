@@ -1,39 +1,39 @@
-/* Антикор: прототип сайта. Чистый JS, без библиотек и внешних запросов, без innerHTML.
-   Данные — data.js (собирает build_data.py из CSV). Заявки НИКУДА не отправляются: на экране показывается,
-   что ушло бы в Telegram и CRM. */
+/* Антикор: боевой сайт. Чистый JS, без библиотек, без innerHTML. Внешних запросов нет, кроме отправки заявки
+   на адрес CONFIG.endpoint (его подключает агентство) и перехода по нажатию кнопки «Отправить в Telegram».
+   Данные — data.js (собирает build_data.py из CSV). Пока адрес приёма заявок не задан, форма честно говорит,
+   что заявка не отправилась, и ничего не имитирует. */
 (function () {
   'use strict';
 
   var D = window.ANTIKOR_DATA;
 
-  /* ---------- Одно место для данных владельца. Пусто = на странице остаётся жёлтая метка. ---------- */
+  /* ---------- Одно место для данных владельца. Пусто = на странице остаётся жёлтая вставка (INSERTS.md). ---------- */
   var CONFIG = {
-    name: '', phone: '', address: '', telegram: '', owner: '',
+    name: '', phone: '', address: '', owner: '',
+    telegram: '',         // ссылка вида https://t.me/... или https://max.ru/... (В-05); другие адреса игнорируются
     years: '7',           // срок гарантии, лет (решение владельца 03.11.2026)
     posts: '7', cars_day: '', hours: '', odor_days: '', callback: '', nearest: '',
-    ymId: 0,              // ЗАГЛУШКА: номер счётчика Яндекс Метрики даст владелец
-    policyVersion: 'v1 (заглушка)',
-    prod: false           // боевой сайт: true. Тогда адрес ?show=... игнорируется, а отзывы-примеры выключены
+    endpoint: '',         // адрес приёма заявок, https://... (В-61): вебхук подключает агентство; пусто = заявка не уходит
+    ymId: 0,              // номер счётчика Яндекс Метрики даст владелец (В-60)
+    policyVersion: ''     // версия политики ПД: после появления документа (В-51) записать дату или номер
   };
-  /* Блоки с флагами. show_reviews: в прототипе включён и показывает ПРИМЕР оформления с пометкой.
-     На боевом сайте (CONFIG.prod: true) блок отзывов выключен принудительно и ?show= не действует: выдуманные отзывы выводить нельзя (ст. 5 38-ФЗ).
-     Настоящие отзывы - отдельное решение: убрать примеры из index.html и подключить их.
-     Остальные скрыты; для показа в прототипе — адрес ?show=works,opening,faq4 */
-  var FLAGS = { show_reviews: true, show_works: false, show_opening_banner: false, show_faq_dealer_warranty: false };
-  var SHOW_ALIAS = { reviews: 'show_reviews', works: 'show_works', opening: 'show_opening_banner', faq4: 'show_faq_dealer_warranty' };
+  /* Блоки под флагами. Все выключены. Отзывы: на сайте только настоящие (ст. 5 38-ФЗ); блок откроем, когда у карточки
+     в Яндекс Картах появятся живые отзывы и будет подключён виджет: тогда show_reviews: true. */
+  var FLAGS = { show_reviews: false, show_works: false, show_opening_banner: false, show_faq_dealer_warranty: false };
 
+  /* Вставки в текстах ниже: «ВСТАВКА В-NN: что нужно — от кого» в квадратных скобках; коды и описание — INSERTS.md */
   var PK = {
     bottom: { name: 'Днище', who: 'Нужна защита днища за минимальные деньги',
-      inc: ['Снятие защиты днища, мойка, сушка, обработка днища ', ['[материал]'], '. Арки и скрытые полости не входят ', ['[уточняется]']],
+      inc: ['Снятие защиты днища, мойка, сушка, обработка днища ', ['[ВСТАВКА В-13: материал — от Артёма]'], '. Арки и скрытые полости не входят ', ['[ВСТАВКА В-14: уточняется — от Артёма]']],
       incShort: 'снятие защиты днища · мойка и сушка · обработка днища. Арки и скрытые полости не входят' },
     standard: { name: 'Стандарт', who: 'Основная защита для большинства машин',
-      inc: ['Снятие колёс, подкрылков, защиты; мойка, сушка; днище и арки — ', ['[материал]'], '; скрытые полости — ', ['[материал]']],
+      inc: ['Снятие колёс, подкрылков, защиты; мойка, сушка; днище и арки — ', ['[ВСТАВКА В-13: материал — от Артёма]'], '; скрытые полости — ', ['[ВСТАВКА В-13: материал — от Артёма]']],
       incShort: 'снятие колёс, подкрылков и защиты · мойка и сушка · днище и арки · скрытые полости' },
     antishum: { name: 'Антишум', who: 'Новая или почти новая машина, хочется меньше шума в салоне',
-      inc: ['То же, что «Стандарт», но днище и арки — шумопоглощающим составом ', ['[материал]']],
+      inc: ['То же, что «Стандарт», но днище и арки — шумопоглощающим составом ', ['[ВСТАВКА В-13: материал — от Артёма]']],
       incShort: 'снятие колёс, подкрылков и защиты · мойка и сушка · днище и арки шумопоглощающим составом · скрытые полости' },
     zinc: { name: 'Цинк', who: 'Старший пакет: составы с цинком',
-      inc: ['То же, что «Стандарт», составы с цинком ', ['[материал]']],
+      inc: ['То же, что «Стандарт», составы с цинком ', ['[ВСТАВКА В-13: материал — от Артёма]']],
       incShort: 'снятие колёс, подкрылков и защиты · мойка и сушка · днище и арки, скрытые полости — составы с цинком' }
   };
   var FORM_RU = { calc: 'калькулятор', quiz: 'подбор пакета по вопросам', contact: 'контакты', no_model: 'калькулятор, «моей модели нет»' };
@@ -42,13 +42,22 @@
   function own(o, k) { return Object.prototype.hasOwnProperty.call(o, k); }
   function $(s, r) { return (r || document).querySelector(s); }
   function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  /* Русская типографика в текстах, которые выводит JS: неразрывный пробел после коротких предлогов и союзов,
+     перед тире и между числом и словом (методика web-design, шаг 3.4) */
+  var NB = '\u00a0';
+  function typo(s) {
+    return String(s)
+      .replace(/(^|[\s(«„])(в|во|на|с|со|к|ко|у|о|об|и|а|но|не|ни|по|до|от|за|из|при)\s+(?=\S)/gi, function (m, a, b) { return a + b + NB; })
+      .replace(/(\S)\s+—/g, '$1' + NB + '—')
+      .replace(/(\d)\s+(?=[а-яёА-ЯЁ₽%])/g, '$1' + NB);
+  }
   function h(tag, a) {
     var e = document.createElement(tag), k, i;
     if (a) {
       for (k in a) {
         if (a[k] === false || a[k] == null) continue;
         if (k === 'class') e.className = a[k];
-        else if (k === 'text') e.textContent = a[k];
+        else if (k === 'text') e.textContent = typo(a[k]);
         else e.setAttribute(k, a[k] === true ? '' : a[k]);
       }
     }
@@ -57,9 +66,9 @@
   }
   function add(e, k) {
     if (k == null || k === false) return;
-    if (Array.isArray(k)) { // [метка, ключ конфига] -> жёлтая заглушка
+    if (Array.isArray(k)) { // массив (метка, ключ конфига) -> жёлтая вставка
       e.appendChild(h('span', { class: 'stub', 'data-cfg': k[1] || null, text: k[0] }));
-    } else if (typeof k === 'string') e.appendChild(document.createTextNode(k));
+    } else if (typeof k === 'string') e.appendChild(document.createTextNode(typo(k)));
     else e.appendChild(k);
   }
   function clear(e) { while (e.firstChild) e.removeChild(e.firstChild); }
@@ -79,6 +88,11 @@
   });
   var MAIN_CLASSES = D.classes.filter(function (c) { return !c.special; });
 
+  /* Цены: пока в data.js нет прайса Артёма (HAS_PRICES = false), вместо сумм везде видимая вставка В-38 (методичка web-design v2, шаг 4.2) */
+  var HAS_PRICES = !!(D.prices && D.prices.standard && D.prices.standard.AB != null);
+  var STUB_PRICE = '[ВСТАВКА В-38: цена пакета по классу — прайс от Артёма]';
+  var STUB_ARCHES = '[ВСТАВКА В-22: цена шумоизоляции арок по классу — прайс от Артёма]';
+  var STUB_TABLE = '[ВСТАВКА В-38: таблица цен по классам и пакетам — прайс от Артёма]';
   function priceOf(pkg, cls) { var v = own(D.prices, pkg) && own(D.prices[pkg], cls) ? D.prices[pkg][cls] : null; return v == null ? null : v; }
   function archesOf(cls) { return own(D.arches, cls) ? D.arches[cls] : 0; }
   function total(pkg, cls, arches) {
@@ -88,17 +102,27 @@
   }
 
   /* ---------- Конфиг и флаги ---------- */
+  function digits(v) { return String(v).replace(/\D/g, ''); }
   function applyCfg(root) {
     $$('[data-cfg]', root).forEach(function (e) {
       var v = CONFIG[e.getAttribute('data-cfg')];
       if (v) { e.textContent = v; e.classList.remove('stub'); }
     });
+    /* ссылки: телефон и мессенджер; адрес мессенджера — только https://t.me/ или https://max.ru/ */
+    $$('[data-href]', root).forEach(function (e) {
+      var k = e.getAttribute('data-href'), v = '';
+      if (k === 'tel') { var d = digits(CONFIG.phone); if (d.length === 11 && d.charAt(0) === '8') d = '7' + d.slice(1); if (d.length >= 10) v = 'tel:+' + d; }
+      else if (k === 'telegram' && /^https:\/\/(t\.me|max\.ru)\//.test(CONFIG.telegram)) v = CONFIG.telegram;
+      if (v) { e.setAttribute('href', v); if (k === 'telegram') { e.setAttribute('target', '_blank'); e.setAttribute('rel', 'noopener'); } }
+    });
+    $$('[data-hide-if]', root).forEach(function (e) {
+      var k = e.getAttribute('data-hide-if'), v = CONFIG[k];
+      if (k === 'telegram') v = /^https:\/\/(t\.me|max\.ru)\//.test(v);
+      if (k === 'endpoint') v = /^https:\/\//.test(v);
+      e.hidden = !!v;
+    });
   }
   function applyFlags() {
-    var v = '';
-    if (CONFIG.prod) FLAGS.show_reviews = false;   // боевой сайт: примеры отзывов не показываем, ?show= не читаем
-    else try { v = new URLSearchParams(location.search).get('show') || ''; } catch (e) { v = ''; }
-    v.split(',').forEach(function (k) { if (own(SHOW_ALIAS, k)) FLAGS[SHOW_ALIAS[k]] = true; });
     $$('[data-flag]').forEach(function (e) { e.hidden = !FLAGS[e.getAttribute('data-flag')]; });
   }
 
@@ -133,6 +157,12 @@
     var m = curModel();
     return m ? carName(curBrand(), m) : '';
   }
+  /* подпись для Telegram и адреса: только класс из списка, без свободного текста клиента */
+  function shareLabel() {
+    if (S.custom) return S.customCls ? 'Машина не из списка, класс: ' + classByCode[S.customCls].name : 'Машина не из списка';
+    var m = curModel();
+    return m ? carName(curBrand(), m) : '';
+  }
   function pkgLabel() {
     if (!S.pkg) return '';
     return PK[S.pkg].name + (S.arches && S.pkg !== 'bottom' ? ' + шумоизоляция арок' : '');
@@ -143,7 +173,7 @@
     if (S.custom) {
       q.push('custom=1');
       if (S.customCls) q.push('class=' + classByCode[S.customCls].key);
-      if (S.customText.trim()) q.push('car=' + encodeURIComponent(S.customText.trim()));
+      /* свободный текст «своя модель» в адрес не попадает: там могут оказаться имя и телефон (152-ФЗ) */
     } else {
       if (S.brand) q.push('brand=' + S.brand);
       if (S.model) q.push('model=' + S.model);
@@ -176,7 +206,7 @@
     if (p.custom === '1') {
       S.custom = true; any = true;
       D.classes.forEach(function (c) { if (!c.special && c.key === p['class']) S.customCls = c.code; });
-      S.customText = (p.car || '').slice(0, 80);
+      /* параметр car= игнорируем: свободный текст из адреса не читаем и не показываем */
     } else if (p.brand && own(brandBySlug, p.brand)) {
       S.brand = p.brand; any = true;
       if (p.model && own(brandBySlug[p.brand].bySlug, p.model)) S.model = p.model;
@@ -276,7 +306,7 @@
           h('span', { class: 'pkg-name', text: p.name }),
           h('span', { class: 'pkg-who', text: p.who }),
           incEl,
-          h('span', { class: 'pkg-inc' }, 'Срок: ', ['[N]', 'hours'], ' ч'),
+          h('span', { class: 'pkg-inc' }, 'Срок: ', ['[ВСТАВКА В-11: N часов — от Артёма]', 'hours'], ' ч'),
           price));
       $('input', card).addEventListener('change', function () { setPkg(id); });
       el.pkgGrid.appendChild(card);
@@ -309,7 +339,7 @@
       e.preventDefault();
       if (!S.brand) { $('#hero-brand').focus(); return; }
       if (!S.model) { $('#hero-model').focus(); return; }
-      goal('calc_price_shown');
+      if (HAS_PRICES) goal('calc_price_shown');
       scrollTo($('#calc'));
     });
   }
@@ -351,7 +381,7 @@
       var c = classByCode[cls];
       clear(el.className);
       el.className.appendChild(document.createTextNode(c.name));
-      if (c.special) { el.className.appendChild(document.createTextNode(' ')); add(el.className, ['[название класса — уточняется]']); }
+      if (c.special) { el.className.appendChild(document.createTextNode(' ')); add(el.className, ['[ВСТАВКА В-24: название класса — уточняется]']); }
       el.classSil.src = 'img/' + (m && m.v ? m.v : c.sil) + '.svg'; /* силуэт по типу кузова модели, если он известен (build_data.py), иначе силуэт класса */
       el.classSil.alt = 'Силуэт автомобиля: ' + c.name;
       var note = '';
@@ -364,17 +394,19 @@
     $$('[data-price]', el.pkgGrid).forEach(function (p) {
       var id = p.getAttribute('data-price'), v = cls ? priceOf(id, cls) : null;
       clear(p);
-      if (!cls) { p.className = 'pkg-price na'; p.textContent = 'Выберите модель — покажем цену'; }
-      else if (v == null) { p.className = 'pkg-price na'; p.textContent = 'Цену назовём при звонке'; }
-      else { p.className = 'pkg-price'; p.appendChild(document.createTextNode(rub(v))); p.appendChild(document.createTextNode(' ')); p.appendChild(h('small', { class: 'pn', text: 'цены будут уточнены' })); }
+      if (!cls) { p.className = 'pkg-price na'; p.textContent = typo('Выберите модель — покажем цену'); }
+      else if (!HAS_PRICES) { p.className = 'pkg-price na'; add(p, [STUB_PRICE]); }
+      else if (v == null) { p.className = 'pkg-price na'; p.textContent = typo('Цену назовём при звонке'); }
+      else { p.className = 'pkg-price'; p.appendChild(document.createTextNode(rub(v))); }
     });
     $$('input[name=pkg]', el.pkgGrid).forEach(function (i) { i.checked = i.value === S.pkg; });
 
     el.arches.disabled = S.pkg === 'bottom';
     el.arches.checked = S.arches && S.pkg !== 'bottom';
     clear(el.archesPrice);
-    if (cls) { el.archesPrice.appendChild(document.createTextNode('+' + rub(archesOf(cls)) + ' ')); el.archesPrice.appendChild(h('small', { class: 'pn', text: 'цены будут уточнены' })); }
-    else { el.archesPrice.appendChild(document.createTextNode('+\u00a0')); add(el.archesPrice, ['[10 000]']); el.archesPrice.appendChild(document.createTextNode('\u00a0₽')); }
+    if (!HAS_PRICES) add(el.archesPrice, [STUB_ARCHES]);
+    else if (cls) { el.archesPrice.appendChild(document.createTextNode('+' + rub(archesOf(cls)))); }
+    else el.archesPrice.appendChild(document.createTextNode(typo('цена — после выбора модели')));
 
     if (el.archesStub) el.archesStub.hidden = S.pkg !== 'antishum';
     el.archesOff.hidden = S.pkg !== 'bottom';
@@ -390,14 +422,15 @@
     if (!S.pkg) { el.formWrap.hidden = true; r.appendChild(h('p', { class: 'res-empty', text: 'Выберите пакет — здесь появится итог с ценой и составом работ.' })); return; }
     var t = total(S.pkg, cls, S.arches), inc = PK[S.pkg].incShort + (S.arches && S.pkg !== 'bottom' ? ' · шумоизоляция арок' : '');
     r.appendChild(h('p', { class: 'res-title', text: carLabel() + ' · ' + pkgLabel() }));
-    if (t == null) r.appendChild(h('p', { class: 'res-price na', text: 'Цену назовём при звонке' }));
-    else r.appendChild(h('p', { class: 'res-price' }, rub(t), ' ', h('small', { class: 'pn', text: 'цены будут уточнены' })));
-    goal('calc_price_shown');
+    if (!HAS_PRICES) r.appendChild(h('p', { class: 'res-price na' }, [STUB_PRICE]));
+    else if (t == null) r.appendChild(h('p', { class: 'res-price na', text: 'Цену назовём при звонке' }));
+    else r.appendChild(h('p', { class: 'res-price' }, rub(t)));
+    if (HAS_PRICES) goal('calc_price_shown');
     r.appendChild(h('div', { class: 'res-list' },
       h('p', {}, h('b', { text: 'Что входит' }), inc + '.'),
       h('p', {}, h('b', { text: 'Что может изменить цену' }), 'сильная ржавчина, которую надо зачистить до обработки · снятие старого антикора · нестандартная защита или обвес. Об этом скажем на осмотре — до начала работ.'),
-      h('p', {}, h('b', { text: 'Когда цена окончательная' }), 'после осмотра машины в боксе. Записываем её в заказ-наряд, и после этого она не меняется ', ['[уточняется]'], '.'),
-      h('p', {}, h('b', { text: 'Гарантия' }), ['[N]', 'years'], ' лет на покрытие в обработанных зонах, при условиях · ', h('a', { href: '#warranty' }, 'условия'))));
+      h('p', {}, h('b', { text: 'Когда цена окончательная' }), 'после осмотра машины в боксе. Записываем её в заказ-наряд, и после этого она не меняется ', ['[ВСТАВКА В-26: подтвердить у Артёма: цена фиксируется в заказ-наряде]'], '.'),
+      h('p', {}, h('b', { text: 'Гарантия' }), CONFIG.years + ' лет на покрытие в обработанных зонах, при условиях · ', h('a', { href: '#warranty' }, 'условия'))));
     var go = h('button', { class: 'btn', type: 'button', text: 'Записаться с этим расчётом' });
     go.addEventListener('click', function () { el.formWrap.hidden = false; scrollTo(el.formWrap); setTimeout(function () { $('#calc-phone').focus({ preventScroll: true }); }, 350); goal('calc_book'); });
     var cp = h('button', { class: 'btn btn-ghost', type: 'button', text: 'Скопировать ссылку на расчёт' });
@@ -407,10 +440,10 @@
     sh.addEventListener('click', shareTg);
     r.appendChild(h('div', { class: 'res-btns' }, go, cp, sh, st));
     r.appendChild(h('div', { class: 'res-q' },
-      h('a', { href: '#q-smell' }, 'Запах — ', ['[N]', 'odor_days'], ' дней, расскажем, как проветрить'),
+      h('a', { href: '#q-smell' }, 'Запах — ', ['[ВСТАВКА В-19: N дней — от Артёма]', 'odor_days'], ' дней, расскажем, как проветрить'),
       h('a', { href: '#q-cavity' }, 'Полости — список зон по вашей машине'),
-      h('a', { href: '#q-conveyor' }, 'Одна машина — один пост на весь день ', ['[подтвердить]']),
-      h('a', { href: '#q-queue' }, 'Ближайшая запись — ', ['[через N дней / на ближайшие дни]', 'nearest'])));
+      h('a', { href: '#q-conveyor' }, 'Одна машина — один пост на весь день ', ['[ВСТАВКА В-21: подтвердить у Артёма]']),
+      h('a', { href: '#q-queue' }, 'Ближайшая запись — ', ['[ВСТАВКА В-09: через N дней / на ближайшие дни — от Артёма]', 'nearest'])));
     applyCfg(r);
   }
 
@@ -425,7 +458,7 @@
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok, fallback); else fallback();
   }
   function shareTg() {
-    var t = total(S.pkg, curClass(), S.arches), text = carLabel() + ' · ' + pkgLabel() + (t != null ? ' — ' + rub(t) : ''), url = calcLink();
+    var t = total(S.pkg, curClass(), S.arches), text = shareLabel() + ' · ' + pkgLabel() + (t != null ? ' — ' + rub(t) : ''), url = calcLink();
     goal('click_telegram');
     window.open('https://t.me/share/url?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(text), '_blank', 'noopener');
   }
@@ -433,6 +466,7 @@
   /* ---------- Таблица цен ---------- */
   function buildPriceTable() {
     var box = $('#price-table'), pk = D.pkgs;
+    if (!HAS_PRICES) { box.appendChild(h('p', { class: 'price-stub' }, [STUB_TABLE])); return; }
     var thead = h('tr', {}, h('th', { scope: 'col', text: 'Класс (примеры моделей)' }));
     pk.forEach(function (id) { thead.appendChild(h('th', { scope: 'col', text: PK[id].name })); });
     thead.appendChild(h('th', { scope: 'col', text: '+ шумоизоляция арок' }));
@@ -480,6 +514,7 @@
 
   function heroExample() {
     var b = brandBySlug.geely, m = b && b.bySlug.coolray;
+    if (!HAS_PRICES) { var he = $('#hero-example'); clear(he); add(he, [STUB_PRICE]); var hn = he.parentNode.querySelector('.pn'); if (hn) hn.hidden = true; return; }
     if (m) $('#hero-example').textContent = carName(b, m) + ', пакет «' + PK.standard.name + '» — ' + rub(priceOf('standard', m.c));
   }
 
@@ -513,13 +548,19 @@
     /* Отправка только через общую проверку: у формы method="dialog" (вне окна ничего не отправляет),
        а программный submit() переводим на requestSubmit(), чтобы сработала проверка согласия. */
     form.submit = function () { if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event('submit', { cancelable: true })); };
+    var busy = false;
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+      if (busy) return;
       if (!cb.checked) { hint.hidden = false; cb.focus(); return; }
       if (!phoneOk(ph.value)) {
         er.textContent = 'Введите телефон полностью: например, +7 900 000-00-00'; er.hidden = false; ph.setAttribute('aria-invalid', 'true'); ph.focus(); return;
       }
-      submitLead(form, getCtx());
+      busy = true; var label = btn.textContent;
+      btn.disabled = true; btn.textContent = 'Отправляем…'; form.setAttribute('aria-busy', 'true');
+      submitLead(form, getCtx()).then(function () {}, function () {}).then(function () {
+        busy = false; btn.textContent = label; form.removeAttribute('aria-busy'); sync();
+      });
     });
   }
 
@@ -546,8 +587,8 @@
       pd_consent: !!form.elements.pd_consent.checked, pd_consent_at: p.day + '.' + p.month + '.' + p.year + ' ' + p.hour + ':' + p.minute + ' МСК', policy_version: CONFIG.policyVersion
     };
   }
-  /* Сообщение в мессенджер (Telegram или MAX) и письмо на почту: имя, телефон и все ответы формы (решение владельца 03.11.2026).
-     В прототипе ничего не отправляется - текст только показывается на экране. */
+  /* Текст сообщения в мессенджер (Telegram или MAX) и письма на почту: имя, телефон и все ответы формы (решение владельца 03.11.2026).
+     Его собирает страница и отправляет вместе с полями заявки на CONFIG.endpoint; рассылкой в мессенджер и на почту занимается вебхук. */
   function tgText(l) {
     var pk = l.package ? PK[l.package].name + (l.arches ? ' + шумоизоляция арок' : '') : '';
     var car = l.model_custom ? l.model_custom + ' (класс выбран клиентом: ' + l.class_name + ')' : (l.brand ? joinName(l.brand, l.model) + ', класс: ' + l.class_name : 'не указана');
@@ -563,25 +604,43 @@
     lines.push('Форма: ' + (FORM_RU[l.form] || l.form) + (l.calc_link ? ' · расчёт: ' + l.calc_link : ''));
     return lines.join('\n');
   }
-  function submitLead(form, ctx) {
-    var l = buildLead(form, ctx);
-    goal(l.form === 'quiz' ? 'lead_quiz' : l.form === 'contact' ? 'lead_contact' : 'lead_calc');
-    $('#out-tg').textContent = tgText(l);
-    $('#out-crm').textContent = JSON.stringify(l, null, 2);
-    $('#out-goals').textContent = goals.join('\n');
+  /* Отправка: JSON на CONFIG.endpoint (https). Без адреса или при ошибке сети/ответа показываем окно «Заявка не отправилась»;
+     цель Метрики и «Заявка у нас» — только после успешного ответа. */
+  function sendLead(payload) {
+    if (!/^https:\/\//.test(CONFIG.endpoint)) return Promise.reject(new Error('endpoint'));
+    var ctl = window.AbortController ? new AbortController() : null, timer = ctl ? setTimeout(function () { ctl.abort(); }, 15000) : 0;
+    return fetch(CONFIG.endpoint, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+      credentials: 'omit', referrerPolicy: 'no-referrer', signal: ctl ? ctl.signal : undefined
+    }).then(function (r) { clearTimeout(timer); if (!r.ok) throw new Error('http ' + r.status); }, function (e) { clearTimeout(timer); throw e; });
+  }
+  function showResult(ok, l) {
+    var d = $('#thanks');
+    $('#thanks-h').textContent = ok ? 'Заявка у нас' : 'Заявка не отправилась';
+    $('#thanks-ok').hidden = !ok; $('#thanks-fail').hidden = ok;
     var tc = l.package ? [l.brand ? joinName(l.brand, l.model) : (l.model_custom || 'машина без модели в списке'), PK[l.package].name + (l.arches ? ' + шумоизоляция арок' : ''), l.price_shown != null ? rub(l.price_shown) : 'цену назовём при звонке'].join(' · ') : 'расчёт не выбирали';
     $('#thanks-calc').textContent = tc;
-    $('#thanks-copy-st').textContent = '';
-    $('#thanks').dataset.link = l.calc_link || (location.href.split('#')[0]);
-    var d = $('#thanks');
-    if (d.showModal) d.showModal(); else d.setAttribute('open', '');
+    $('#thanks-copy-st').textContent = ''; $('#fail-copy-st').textContent = '';
+    d.dataset.link = l.calc_link || (location.href.split('#')[0]);
     applyCfg(d);
-    window.__lastLead = l;
+    if (d.showModal) d.showModal(); else d.setAttribute('open', '');
+  }
+  function submitLead(form, ctx) {
+    var l = buildLead(form, ctx), payload = {}, k;
+    for (k in l) if (own(l, k)) payload[k] = l[k];
+    payload.message_text = tgText(l);
+    return sendLead(payload).then(function () {
+      goal(l.form === 'quiz' ? 'lead_quiz' : l.form === 'contact' ? 'lead_contact' : 'lead_calc');
+      showResult(true, l);
+    }, function () { showResult(false, l); });
   }
   function initThanks() {
     var d = $('#thanks');
-    $('#thanks-close').addEventListener('click', function () { if (d.close) d.close(); else d.removeAttribute('open'); });
+    function close() { if (d.close) d.close(); else d.removeAttribute('open'); }
+    $('#thanks-close').addEventListener('click', close);
+    $('#fail-close').addEventListener('click', close);
     $('#thanks-copy').addEventListener('click', function () { copyText(d.dataset.link, $('#thanks-copy-st')); goal('calc_link_copy'); });
+    $('#fail-copy').addEventListener('click', function () { copyText(d.dataset.link, $('#fail-copy-st')); });
   }
 
   function calcCtx() {
@@ -668,18 +727,20 @@
     var pi = Q.a[3] == null ? 1 : Q.a[3], id = Q_PKG[pi], car = qCar();
     qBody.appendChild(h('h3', { tabindex: '-1', text: 'Вам подойдёт пакет «' + PK[id].name + '»' }));
     var why = h('div', { class: 'q-extra' }, h('p', { text: Q_WHY[pi] + ' Точнее скажем на осмотре: посмотрим днище и покажем вам.' }));
-    if ((Q.a[0] === 0 || Q.a[0] === 1) && id === 'bottom') why.appendChild(h('p', null, 'Для новой машины подойдёт Стандарт или Антишум: заводская защита, как правило, закрывает не все зоны ', ['[уточнить]'], '. Покажем на осмотре, что есть на вашей машине. Решать вам.'));
+    if ((Q.a[0] === 0 || Q.a[0] === 1) && id === 'bottom') why.appendChild(h('p', null, 'Для новой машины подойдёт Стандарт или Антишум: заводская защита, как правило, закрывает не все зоны ', ['[ВСТАВКА В-25: формулировка уточняется — от Артёма]'], '. Покажем на осмотре, что есть на вашей машине. Решать вам.'));
     if (Q.a[1] === 2) why.appendChild(h('p', { text: 'Сначала посмотрим днище: возможно, нужна зачистка, и цена изменится. Скажем до начала работ.' }));
     if (Q.a[2] === 1) why.appendChild(h('p', { text: 'Покажем на осмотре, что осталось от прежнего покрытия. Возможно, хватит меньшего пакета.' }));
     qBody.appendChild(why);
     var priceBox = h('p', { class: 'q-price' });
     if (car) {
       var v = priceOf(id, car.model.c);
-      priceBox.appendChild(document.createTextNode(carName(car.brand, car.model) + ': ' + (v != null ? rub(v) : 'цену назовём при звонке') + ' '));
-      if (v != null) priceBox.appendChild(h('small', { class: 'pn', text: 'цены будут уточнены' }));
+      if (!HAS_PRICES) { priceBox.appendChild(document.createTextNode(carName(car.brand, car.model) + ': ')); add(priceBox, [STUB_PRICE]); }
+      else priceBox.appendChild(document.createTextNode(carName(car.brand, car.model) + ': ' + (v != null ? rub(v) : 'цену назовём при звонке')));
+    } else if (!HAS_PRICES) {
+      add(priceBox, [STUB_PRICE]); priceBox.appendChild(document.createTextNode(' ' + typo('Цена вашей машины — в калькуляторе')));
     } else {
       priceBox.appendChild(document.createTextNode('От ' + rub(priceOf(id, 'AB')) + ' для малых машин (А, В) '));
-      priceBox.appendChild(h('small', { class: 'pn', text: 'цены будут уточнены · цена вашей машины — в калькуляторе' }));
+      priceBox.appendChild(h('small', { class: 'pn', text: 'цена вашей машины — в калькуляторе' }));
     }
     qBody.appendChild(priceBox);
     if (!car) {
@@ -703,8 +764,14 @@
   function initCookie() {
     var b = $('#cookie'), ok = false;
     try { ok = localStorage.getItem('ak_cookie') === '1'; } catch (e) { /* нет хранилища */ }
-    b.hidden = ok;
-    document.body.classList.toggle('has-cookie', !ok);
+    b.hidden = true;
+    if (ok) return;
+    function show() { b.hidden = false; document.body.classList.add('has-cookie'); }
+    /* На телефоне плашка не должна закрывать поля первого экрана: показываем её после первой прокрутки */
+    if (window.matchMedia && window.matchMedia('(max-width: 599px)').matches) {
+      var once = function () { if (window.pageYOffset > 120) { window.removeEventListener('scroll', once); show(); } };
+      window.addEventListener('scroll', once, { passive: true });
+    } else show();
     $('#cookie-ok').addEventListener('click', function () { b.hidden = true; document.body.classList.remove('has-cookie'); try { localStorage.setItem('ak_cookie', '1'); } catch (e) { /* нет хранилища */ } });
   }
   function initMetrikaId() {
@@ -734,4 +801,42 @@
     window.AK = { data: D, total: total, priceOf: priceOf, archesOf: archesOf, state: S, quiz: Q, goals: goals, config: CONFIG };
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+
+/* Страничные мелочи v2 (16.11.2026): «Ещё 4 пункта» в сравнении, сравнение на широком экране, переход по ссылке на вопрос FAQ */
+(function () {
+  function ready(fn) { if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
+  ready(function () {
+    var btn = document.getElementById('cmp-more-btn'), more = document.getElementById('cmp-more');
+    if (btn && more) {
+      btn.addEventListener('click', function () {
+        var open = more.hidden;
+        more.hidden = !open;
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        btn.textContent = open ? 'Скрыть 4 пункта' : 'Ещё 4 пункта';
+      });
+    }
+    /* на широком экране колонка «Почему это важно» видна сразу (заголовок спрятан стилем), на узком — свёрнута */
+    var wide = window.matchMedia ? window.matchMedia('(min-width: 900px)') : null;
+    function syncWhy() {
+      var list = document.querySelectorAll('.cmp details.why');
+      for (var i = 0; i < list.length; i++) { if (wide && wide.matches) list[i].setAttribute('open', ''); else list[i].removeAttribute('open'); }
+    }
+    syncWhy();
+    if (wide && wide.addEventListener) wide.addEventListener('change', syncWhy);
+    /* ссылка вида #q-smell должна открывать сам вопрос */
+    function openHash() {
+      var id = ''; try { id = decodeURIComponent((location.hash || '').slice(1)); } catch (err) { return; }
+      var el = id ? document.getElementById(id) : null;
+      if (el && el.tagName === 'DETAILS') { el.open = true; }
+    }
+    window.addEventListener('hashchange', openHash);
+    document.addEventListener('click', function (e) {
+      var a = e.target && e.target.closest ? e.target.closest('a[href^="#q-"]') : null;
+      if (!a) return;
+      var el = document.getElementById(a.getAttribute('href').slice(1));
+      if (el && el.tagName === 'DETAILS') el.open = true;
+    });
+    openHash();
+  });
 })();

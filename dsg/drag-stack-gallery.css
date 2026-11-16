@@ -1,0 +1,88 @@
+/* Галерея «стопка карточек» (drag-stack-gallery). Префикс dsg-. Без библиотек, без внешних файлов.
+   Без скрипта и при «Уменьшении движения» — обычная сетка фото с подписями.
+   Настройка цветов и размеров — переменные --dsg-* на корне .dsg (значения по умолчанию ниже). */
+
+.dsg{
+  --dsg-ink:var(--ink,#e8ecf0);
+  --dsg-muted:var(--muted,#9aa4af);
+  --dsg-accent:var(--accent,#f5a524);
+  --dsg-glass:rgba(14,17,20,.72);          /* подложка подписи; на белом фото даёт ≈ #515151 → контраст с белым ≈ 8:1 */
+  --dsg-glass-line:rgba(255,255,255,.14);
+  --dsg-radius:20px;
+  --dsg-gap:16px;
+  --dsg-w:min(84%,340px);                  /* ширина карточки в режиме стопки */
+  --dsg-h:360px;                           /* высота карточки в режиме стопки */
+  --dsg-stage-h:500px;                     /* высота сцены: карточка + место для соседних */
+  position:relative;
+  color:var(--dsg-ink);
+  overflow:hidden;                         /* запасной вариант для старых браузеров */
+  overflow:clip;
+}
+.dsg *,.dsg *::before,.dsg *::after{box-sizing:border-box}
+
+/* ---------- карточка (общее для списка и стопки) ---------- */
+.dsg__card{position:relative;margin:0;padding:0;list-style:none}
+.dsg__fig{position:relative;margin:0;width:100%;height:100%;aspect-ratio:4/3;overflow:hidden;border-radius:var(--dsg-radius);
+  background:#262b34;box-shadow:0 10px 30px rgba(0,0,0,.35),inset 0 0 0 1px rgba(255,255,255,.08)}
+.dsg__fig img{display:block;position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:50% 45%;
+  -webkit-user-drag:none;user-select:none}
+.dsg__cap{position:absolute;left:12px;right:12px;bottom:12px;margin:0;padding:12px 16px;border-radius:14px;
+  background:var(--dsg-glass);border:1px solid var(--dsg-glass-line);color:#fff;
+  font-size:16px;line-height:1.35;font-weight:600;text-wrap:balance;overflow-wrap:anywhere;hyphens:none;text-shadow:0 1px 6px rgba(0,0,0,.35)}
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .dsg__cap{background:rgba(14,17,20,.6);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+}
+
+/* ---------- без скрипта и при «Уменьшении движения»: сетка ---------- */
+.dsg__stage{position:relative}
+.dsg__list{display:grid;grid-template-columns:1fr;gap:var(--dsg-gap);margin:0;padding:0;list-style:none}
+@media (min-width:600px){.dsg__list{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:900px){.dsg__list{grid-template-columns:repeat(3,1fr)}}
+.dsg__dots,.dsg__sr{display:none}
+.dsg__hint{display:none}
+
+/* ---------- живой режим: стопка ---------- */
+.dsg--live{--dsg-persp:1200px}
+.dsg--live .dsg__stage{height:var(--dsg-stage-h);perspective:var(--dsg-persp);-webkit-perspective:var(--dsg-persp);
+  touch-action:pan-y;                       /* вертикальную прокрутку страницы отдаём браузеру; решение для режима y — в скрипте */
+  cursor:grab;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+.dsg--live.dsg--grabbing .dsg__stage{cursor:grabbing}
+/* как в образце: у обёртки своя перспектива и сохранение 3D */
+.dsg--live .dsg__list{position:absolute;inset:0;display:block;transform:perspective(var(--dsg-persp));transform-style:preserve-3d}
+.dsg--live .dsg__card{position:absolute;left:0;right:0;top:50%;width:var(--dsg-w);height:var(--dsg-h);margin:calc(var(--dsg-h) / -2) auto 0;
+  transform-origin:50% 50%;backface-visibility:hidden;-webkit-backface-visibility:hidden;opacity:0;will-change:transform,opacity}
+.dsg--live .dsg__card.is-active .dsg__fig{box-shadow:0 18px 44px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.12)}
+.dsg--live .dsg__fig{aspect-ratio:auto}
+.dsg--live .dsg__stage:focus-visible{outline:none}
+.dsg--live .dsg__stage:focus-visible .dsg__card.is-active .dsg__fig{outline:3px solid var(--dsg-accent);outline-offset:3px}
+.dsg--live .dsg__card:not(.is-active){cursor:pointer}
+
+/* индикаторы-точки: кнопки 44 px, видимая точка 12 px */
+.dsg--live .dsg__dots{display:flex;justify-content:center;gap:0;margin:8px 0 0;padding:0}
+.dsg__dot{position:relative;width:44px;height:44px;margin:0;padding:0;border:0;background:none;cursor:pointer;color:#fff;-webkit-tap-highlight-color:transparent}
+.dsg__dot::before{content:"";position:absolute;left:50%;top:50%;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;
+  background:rgba(255,255,255,.22);transition:transform .3s,background .3s}
+.dsg__dot[aria-current="true"]::before{background:#fff;transform:scale(1.4)}
+.dsg__dot:focus-visible{outline:2px solid var(--dsg-accent);outline-offset:-4px;border-radius:50%}
+@media (hover:hover){.dsg__dot:hover::before{background:rgba(255,255,255,.55)}.dsg__dot[aria-current="true"]:hover::before{background:#fff}}
+
+/* режим y: точки столбиком справа от стопки, как в образце; цель нажатия везде 44 × 44 px (ревью r1, Важно 3), видимый маркер 12 px */
+.dsg--live[data-axis="y"] .dsg__dots{position:absolute;right:0;top:calc(var(--dsg-stage-h) / 2);transform:translateY(-50%);flex-direction:column;margin:0}
+
+/* подсказка: пульсация только пока блок на экране */
+.dsg--live .dsg__hint{display:block;margin:8px auto 0;max-width:none;text-align:center;color:var(--dsg-muted);font-size:14px;line-height:1.5}
+.dsg--live.dsg--inview .dsg__hint{animation:dsg-pulse 2s ease-in-out infinite}
+.dsg--live.dsg--touched .dsg__hint{animation:none;opacity:.7}
+@keyframes dsg-pulse{0%,100%{opacity:.6}50%{opacity:1}}
+
+.dsg--live .dsg__sr{display:block;position:absolute;width:1px;height:1px;margin:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* размеры стопки */
+@media (min-width:600px){.dsg{--dsg-w:min(80%,560px);--dsg-h:420px;--dsg-stage-h:560px}}
+@media (min-width:900px){.dsg{--dsg-w:min(78%,640px);--dsg-h:480px;--dsg-stage-h:620px}.dsg__cap{font-size:18px}}
+@media (min-width:900px) and (max-height:780px){.dsg{--dsg-h:420px;--dsg-w:min(78%,560px);--dsg-stage-h:540px}}
+
+@media (prefers-reduced-motion:reduce){
+  .dsg .dsg__dot::before{transition:none}
+  .dsg .dsg__hint{animation:none}
+}

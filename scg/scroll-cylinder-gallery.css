@@ -1,0 +1,405 @@
+/* Галерея «цилиндр» — стили. «Альфа-Контекст», 10.11.2026; версия 2 (вид и движение 1:1 с эталоном владельца).
+   Геометрия, расстояния, затемнения и точки перелома по размеру окна совпадают с эталоном (его параметры перечислены в README);
+   цвета и шрифт настраиваются переменными на корне .scg (список — в README.md).
+   Шрифт и размеры шрифта наследуются от сайта, где не заданы явно. */
+
+:where(.scg) {
+  /* значения по умолчанию стоят в :where(), чтобы правила сайта (.scg {...}) побеждали независимо от порядка подключения.
+     Цвета: по умолчанию палитра эталона; сайт подменяет своими */
+  --scg-bg: #16101e;               /* фон блока */
+  --scg-bg-back: #211a2c;          /* подложка под размытыми картинками */
+  --scg-card-bg: #241e2c;          /* фон карточки до загрузки фото */
+  --scg-ink: #fff;                 /* основной текст */
+  --scg-muted: rgba(240, 231, 250, .73);   /* вторичный текст */
+  --scg-line: rgba(255, 255, 255, .35);    /* рамки кнопок */
+  --scg-accent: #c4a0ff;           /* акцентное слово в заголовке */
+  --scg-fill: #d4bbff;             /* полоса прогресса */
+  --scg-ring: #dfc9ff;             /* рамка фокуса */
+  --scg-tint-a: #110c22cf;         /* градиент поверх фона: сверху, 0 % */
+  --scg-tint-b: #15102789;         /* 45 % */
+  --scg-tint-c: #0c0a19ed;         /* снизу, 100 % */
+  /* геометрия (значения эталона) */
+  --scg-top: 0px;                  /* высота липкой шапки сайта, если она есть */
+  --scg-step: 80vh;                /* прокрутка на одну карточку */
+  --scg-extra: 40vh;               /* прокрутка сверх шагов: выход из блока */
+  --scg-pin-h: 100vh;              /* высота липкой части */
+  --scg-ratio: 1.6;                /* ширина / высота карточки (16:10) */
+  --scg-radius: 20px;
+}
+.scg {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  color: var(--scg-ink);
+  background: var(--scg-bg);
+}
+@supports (height: 100svh) {
+  :where(.scg) { --scg-pin-h: calc(100svh - var(--scg-top)); }
+}
+
+/* высокий блок задаёт длину прокрутки: 80vh на карточку + 40vh */
+.scg__track {
+  position: relative;
+  height: calc(var(--scg-step) * var(--scg-n, 4) + var(--scg-extra));
+}
+.scg__pin {
+  position: sticky;
+  top: var(--scg-top);
+  width: 100%;
+  height: var(--scg-pin-h);
+  overflow: hidden;   /* min-height убран (ревью r3): режим «список» включает скрипт, когда высоты не хватает */
+}
+
+/* размытый фон: у каждой картинки свой слой; виден тот, что рядом с центром */
+.scg__bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--scg-bg-back);
+}
+.scg__bgl {
+  position: absolute;
+  inset: -8%;
+  opacity: 0;
+}
+.scg__bgl img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  filter: blur(30px);
+}
+.scg__tint {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--scg-tint-a) 0%, var(--scg-tint-b) 45%, var(--scg-tint-c) 100%);
+}
+
+/* заголовок над цилиндром (необязательный) */
+.scg__head {
+  position: absolute;
+  z-index: 3;
+  top: 96px;
+  left: 20px;
+  right: 20px;
+  text-align: center;
+  pointer-events: none;
+}
+.scg--live .scg__head { will-change: opacity; }
+.scg__eyebrow {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 10px;
+  letter-spacing: .25em;
+  color: var(--scg-muted);
+}
+.scg__h2 {
+  margin: 0;
+  font-weight: 500;
+  font-size: clamp(34px, 4.3vw, 62px);
+  letter-spacing: -.05em;
+  line-height: 1.05;
+}
+.scg__h2 em { font-style: normal; color: var(--scg-accent); }
+
+/* сцена: перспектива и маска сверху и снизу */
+.scg__stage {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  perspective: 1900px;
+  transform-style: preserve-3d;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 21%, #000 28%, #000 77%, transparent 86%);
+  mask-image: linear-gradient(to bottom, transparent 21%, #000 28%, #000 77%, transparent 86%);
+}
+.scg__stage:focus-visible {
+  outline: 2px solid var(--scg-ring);
+  outline-offset: -4px;
+}
+.scg__card {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  margin: 0;
+  width: min(76vw, 760px, calc((var(--scg-pin-h) - 380px) * var(--scg-ratio)));
+  aspect-ratio: var(--scg-ratio);
+  display: block;
+  border-radius: var(--scg-radius);
+  overflow: hidden;
+  color: #fff;
+  background: var(--scg-card-bg);
+  border: 1px solid #ffffff31;
+  box-shadow: 0 30px 80px #0006;
+  backface-visibility: hidden;
+}
+.scg__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.scg__face img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--scg-focus, 50% 50%);
+  display: block;
+}
+.scg__ph {
+  max-width: 28ch;
+  padding: 16px;
+  white-space: pre-line;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #1a1a20;
+}
+.scg__shade {            /* затемнение дальних карточек */
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+}
+.scg__fc { display: none; }
+
+/* подпись: счётчик, название, кнопка */
+.scg__meta,
+.scg__foot {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1120px, 90%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+}
+.scg--live .scg__meta,
+.scg--live .scg__foot { will-change: opacity; }
+.scg__meta { bottom: 83px; }
+.scg__count {
+  flex: 0 0 auto;
+  margin: 0;
+  color: var(--scg-muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.scg__now { color: #fff; font-weight: 500; }
+.scg__cap {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 55%;
+  text-align: center;
+  pointer-events: none;
+}
+.scg__title {
+  display: block;
+  margin: 0 0 6px;
+  font-size: 23px;
+  font-weight: 500;
+  letter-spacing: -.035em;
+  line-height: 1.2;
+  text-wrap: balance;
+  hyphens: none;
+}
+.scg__text {
+  display: block;
+  margin: 0;
+  font-size: 11px;
+  color: var(--scg-muted);
+}
+.scg__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.scg__open {
+  margin-left: auto;
+  padding: 12px 21px;
+  border-radius: 100px;
+  background: #ffffff09;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--scg-line);
+  text-decoration: none;
+  color: #fff;
+  font-size: 12px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 28px;
+  transition: background .2s;
+}
+.scg__open[hidden] { display: none; }
+.scg__open:hover { background: #ffffff27; }
+.scg__open span { font-size: 19px; }
+
+/* низ: подсказка, прогресс, стрелки */
+.scg__foot {
+  bottom: 29px;
+  font-size: 9px;
+  letter-spacing: .18em;
+  color: var(--scg-muted);
+}
+.scg__hint { white-space: nowrap; }
+.scg__progress {
+  width: 100px;
+  height: 2px;
+  background: #ffffff39;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.scg__progress i { display: block; height: 100%; width: 0; background: var(--scg-fill); }
+.scg__nav { display: flex; margin: 0 -4.5px; }     /* кнопка 44 px (зона нажатия), видимый круг 35 px, как в эталоне */
+.scg__btn {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  color: #fff;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: 19px;
+  letter-spacing: 0;
+  line-height: 1;
+}
+.scg__btn + .scg__btn { margin-left: -1px; }          /* между видимыми кругами 8 px */
+.scg__btn::before {
+  content: "";
+  position: absolute;
+  inset: 4.5px;
+  border: 1px solid #ffffff55;
+  border-radius: 50%;
+  background: #ffffff10;
+  transition: background .2s;
+}
+.scg__btn > span { position: relative; }
+.scg__btn:hover::before { background: #ffffff32; }
+.scg__btn[aria-disabled="true"] { opacity: .35; cursor: default; }
+.scg__btn:focus-visible { outline: 2px solid var(--scg-ring); outline-offset: -2px; border-radius: 50%; }
+.scg__open:focus-visible,
+.scg__skip:focus-visible { outline: 2px solid var(--scg-ring); outline-offset: 4px; }
+
+/* «Пропустить галерею»: тихая ссылка в углу липкой части */
+.scg__skip {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 12px;
+  color: var(--scg-muted);
+  font-size: 12px;
+  letter-spacing: .04em;
+  text-decoration: none;
+  opacity: .8;
+}
+@media (hover: hover) {
+  .scg__skip:hover { color: #fff; opacity: 1; text-decoration: underline; }
+}
+
+@media (max-width: 1000px) {
+  .scg__head { top: 96px; }
+  .scg__h2 { font-size: clamp(28px, 6vw, 40px); }
+  .scg__card { top: 45%; width: min(90vw, calc((var(--scg-pin-h) - 320px) * var(--scg-ratio))); border-radius: 16px; }
+  .scg__stage {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 23%, #000 31%, #000 62%, transparent 73%);
+    mask-image: linear-gradient(to bottom, transparent 23%, #000 31%, #000 62%, transparent 73%);
+  }
+  .scg__meta { bottom: 115px; width: 90%; }
+  .scg__cap { bottom: 15px; width: 100%; }
+  .scg__title { font-size: 20px; }
+  .scg__open { padding: 10px 14px; gap: 9px; font-size: 10px; }
+  .scg__foot { width: 90%; bottom: 38px; }
+  .scg__hint { font-size: 9px; }   /* в эталоне 7 px: нечитаемо; единственное осознанное отличие по кеглю */
+  .scg__progress { width: 62px; }
+}
+@media (max-width: 600px) {
+  .scg__head { top: 10svh; }
+  .scg__h2 { font-size: clamp(28px, 8vw, 38px); }
+  .scg__card { width: min(92vw, calc((var(--scg-pin-h) - 270px) * var(--scg-ratio))); }
+  .scg__meta { bottom: 115px; align-items: flex-end; }
+  .scg__cap { bottom: 62px; width: 100%; }
+  .scg__count { font-size: 11px; }
+  .scg__open { font-size: 0; padding: 8px 12px; }
+  .scg__open span { font-size: 22px; }
+  .scg__foot { bottom: 40px; }
+}
+@media (max-height: 600px) and (min-width: 1001px) {
+  .scg__card { width: min(62vw, 760px, calc((var(--scg-pin-h) - 210px) * var(--scg-ratio))); }
+  .scg__head { top: 28px; }
+  .scg__meta { bottom: 65px; }
+  .scg__foot { bottom: 18px; }
+}
+
+/* ---------- статичный режим: reduce-motion (обычный список вместо цилиндра) ---------- */
+.scg--static .scg__track { height: auto; }
+.scg--static .scg__pin { position: static; height: auto; min-height: 0; overflow: visible; padding: 50px 20px; }
+.scg--static .scg__bg,
+.scg--static .scg__meta,
+.scg--static .scg__foot,
+.scg--static .scg__skip { display: none; }
+.scg--static .scg__head {
+  position: relative;
+  inset: auto;
+  margin: 0 auto;
+}
+.scg--static .scg__stage {
+  position: relative;
+  inset: auto;
+  display: grid;
+  gap: 32px;
+  width: min(840px, 100%);
+  margin: 0 auto;
+  padding: 35px 0;
+  perspective: none;
+  transform-style: flat;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+@media (min-width: 600px) {
+  .scg--static .scg__stage { grid-template-columns: 1fr 1fr; }
+}
+.scg--static .scg__card {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  aspect-ratio: auto;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  overflow: visible;
+}
+.scg--static .scg__face {
+  position: relative;
+  inset: auto;
+  aspect-ratio: var(--scg-ratio);
+  border-radius: var(--scg-radius);
+  overflow: hidden;
+  background: var(--scg-card-bg);
+}
+.scg--static .scg__shade { display: none; }
+.scg--static .scg__fc {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--scg-muted);
+}
+.scg--static .scg__fc strong { color: var(--scg-ink); font-size: 16px; font-weight: 650; }
