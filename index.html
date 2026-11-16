@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="ba/before-after.css">
 <meta name="x-insert-seo" content="[ВСТАВКА В-62: мета-теги, Open Graph и разметка schema.org — от Кирилла; title и description выше — рабочие, сверить]">
 <meta name="x-insert-favicon" content="[ВСТАВКА В-63: favicon и логотип — от Льва Давыдовича, после названия]">
-<meta name="x-insert-metrika" content="[ВСТАВКА В-60: код Яндекс Метрики — номер счётчика даст владелец; номер записать в app.js, CONFIG.ymId]">
+<meta name="x-insert-metrika" content="[ВСТАВКА В-60: номер счётчика Яндекс Метрики — даст владелец; записать в app.js, CONFIG.ymId. Загрузчик уже в app.js: код грузится только после «Принять» в плашке cookie]">
 <!-- Яндекс Метрика: счётчика нет, внешних скриптов нет. Когда будет номер, вставить стандартный код сюда. -->
 </head>
 <body id="top">
@@ -44,8 +44,8 @@
 <!-- Блок 1. Первый экран (v2, 16.11.2026: по макету клиента — фото на всю ширину, заголовок капсом, оранжевая строка, одна кнопка) -->
 <section class="hero" id="hero" aria-labelledby="h1">
   <picture class="hero-pic">
-    <source media="(max-width: 600px)" srcset="img/hero-mobile.webp" width="1080" height="1350">
-    <img src="img/hero-desktop.webp" width="1920" height="1080" alt="Мастер в респираторе и перчатках наносит состав пистолетом на днище машины на подъёмнике; на спине куртки логотип АНТИКОРИКА" fetchpriority="high" decoding="async">
+    <source media="(max-width: 600px)" srcset="img/hero-mobile-720.webp 720w, img/hero-mobile.webp 1080w" sizes="100vw" width="1080" height="1350">
+    <img src="img/hero-desktop.webp" srcset="img/hero-desktop-1280.webp 1280w, img/hero-desktop.webp 1920w" sizes="100vw" width="1920" height="1080" alt="Мастер в респираторе и перчатках наносит состав пистолетом на днище машины на подъёмнике; на спине куртки логотип АНТИКОРИКА" fetchpriority="high" decoding="async">
   </picture>
   <div class="wrap hero-in">
     <div class="hero-text">
@@ -138,7 +138,7 @@
 
 <!-- Блок «До и после» (v3): шторка (ba/, компонент templates/components/before-after). Кадры Льва Давыдовича из v3-assets (тёмные пары: днище, арка, порог).
      Пометок про сгенерированные кадры не ставим (решение владельца 16.11.2026); к боевому сайту кадры заменить реальными фото из бокса. Заголовок и подписи — Анна (texts-v3.md, раздел 4). -->
-<section class="sec light ba-sec" id="beforeafter" aria-labelledby="ba-h">
+<section class="sec dark d3 ba-sec" id="beforeafter" aria-labelledby="ba-h">
   <div class="wrap">
     <h2 id="ba-h">До и после антикора: днище, арка, порог</h2>
     <p class="sub">Слева — металл после нескольких зим с реагентами, справа — после обработки. Потяните ползунок.</p>
@@ -236,6 +236,7 @@
               <label class="rad"><input type="radio" name="contact_method" value="Telegram"><span>Telegram</span></label>
               <label class="rad"><input type="radio" name="contact_method" value="Max"><span>Max</span></label>
             </fieldset>
+            <div class="field nick" hidden><label for="calc-nick">Ник в Telegram <span class="opt">необязательно</span></label><input id="calc-nick" name="tg_nick" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="33" placeholder="@nickname" aria-describedby="calc-nick-h"><p class="hint" id="calc-nick-h">Если вас не найти в Telegram по номеру, укажите ник — так мы точно напишем</p><p class="err nick-err" role="alert" hidden></p></div>
             <details class="more">
               <summary>Уточнить для точной цены <span class="opt">необязательно</span></summary>
               <div class="field"><label for="calc-age">Возраст машины</label>
@@ -299,7 +300,7 @@
 </section>
 
 <!-- Блок 7. Гарантия -->
-<section class="sec light" id="warranty" aria-labelledby="w-h">
+<section class="sec dark" id="warranty" aria-labelledby="w-h">
   <div class="wrap">
     <div class="head-split">
       <div>
@@ -340,7 +341,7 @@
   </div>
 </section>
 <!-- Блок 8. Квиз -->
-<section class="sec dark d2" id="quiz" aria-labelledby="quiz-h">
+<section class="sec light" id="quiz" aria-labelledby="quiz-h">
   <div class="wrap">
     <h2 id="quiz-h">Не знаете, какой пакет выбрать?</h2>
     <p class="sub">Четыре вопроса — подскажем пакет и цену для вашей машины.</p>
@@ -361,7 +362,7 @@
 </section>
 
 <!-- Блок 10. Вопросы и ответы -->
-<section class="sec light" id="faq" aria-labelledby="faq-h">
+<section class="sec dark" id="faq" aria-labelledby="faq-h">
   <div class="wrap measure">
     <h2 id="faq-h">Частые вопросы об антикоре</h2>
     <figure class="aside-pic"><img src="img/aside-faq.webp" srcset="img/aside-faq-600.webp 600w, img/aside-faq.webp 1200w" sizes="(min-width:900px) 480px, 92vw" width="1200" height="900" loading="lazy" decoding="async" alt="Белый кроссовер на подъёмнике в боксе, вид спереди"></figure>
@@ -405,7 +406,7 @@
 <footer class="ftr">
   <div class="wrap">
     <p><span class="stub">[ВСТАВКА В-54: ИП / ООО «...» — реквизиты оператора, от Артёма]</span>, ИНН <span class="stub">[ВСТАВКА В-55: ИНН — от Артёма]</span>, ОГРН(ИП) <span class="stub">[ВСТАВКА В-56: ОГРН / ОГРНИП — от Артёма]</span>, <span class="stub">[ВСТАВКА В-57: юридический адрес — от Артёма]</span></p>
-    <ul class="ftr-links"><li><a href="privacy.html" target="_blank" rel="noopener">Политика обработки персональных данных</a></li><li><a href="soglasie.html" target="_blank" rel="noopener">Согласие на обработку персональных данных</a></li><li hidden><a href="garantiya.html" target="_blank" rel="noopener">Условия гарантии</a></li><!-- скрыто, пока на garantiya.html вставка В-53 --></ul>
+    <ul class="ftr-links"><li><a href="privacy.html" target="_blank" rel="noopener">Политика обработки персональных данных</a></li><li><a href="soglasie.html" target="_blank" rel="noopener">Согласие на обработку персональных данных</a></li><li><button class="link" type="button" data-cookie-settings>Настройки cookie</button></li><li hidden><a href="garantiya.html" target="_blank" rel="noopener">Условия гарантии</a></li><!-- скрыто, пока на garantiya.html вставка В-53 --></ul>
     <p>Цена на сайте предварительная; окончательная фиксируется в заказ-наряде после осмотра автомобиля.</p>
     <p class="ftr-brand"><img src="img/logo-antikorika.webp" width="988" height="69" alt="АНТИКОРИКА" loading="lazy" decoding="async"><span>© 2026 АНТИКОРИКА</span></p>
   </div>
@@ -414,8 +415,8 @@
 <a class="dock btn btn-arrow" href="#calc" data-goal="click_calc_dock">Рассчитать цену</a>
 
 <div class="cookie" id="cookie" role="region" aria-label="Файлы cookie" hidden>
-  <p>Мы используем файлы cookie, чтобы сайт работал. <a href="privacy.html" target="_blank" rel="noopener">Подробнее</a></p>
-  <button class="btn btn-sm" type="button" id="cookie-ok">Понятно</button>
+  <p>Мы используем файлы cookie, в том числе для статистики посещений. Подробнее — в <a href="privacy.html#cookie" target="_blank" rel="noopener">политике конфиденциальности</a></p>
+  <div class="cookie-btns"><button class="btn btn-sm btn-ghost" type="button" id="cookie-no">Отклонить</button><button class="btn btn-sm" type="button" id="cookie-ok">Принять</button></div>
 </div>
 
 <!-- Окно после отправки заявки -->
@@ -451,13 +452,15 @@
       <label class="rad"><input type="radio" name="contact_method" value="Telegram"><span>Telegram</span></label>
               <label class="rad"><input type="radio" name="contact_method" value="Max"><span>Max</span></label>
     </fieldset>
+    <div class="field nick" hidden><label for="quiz-nick">Ник в Telegram <span class="opt">необязательно</span></label><input id="quiz-nick" name="tg_nick" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="33" placeholder="@nickname" aria-describedby="quiz-nick-h"><p class="hint" id="quiz-nick-h">Если вас не найти в Telegram по номеру, укажите ник — так мы точно напишем</p><p class="err nick-err" role="alert" hidden></p></div>
     <div class="consent"></div>
     <button class="btn" type="submit" disabled>Получить расчёт и записаться</button>
   </form>
 </template>
 
 <template id="tpl-consent">
-  <label class="check"><input type="checkbox" name="pd_consent" required><span>Я даю <a href="soglasie.html" target="_blank" rel="noopener">согласие на обработку персональных данных</a> — имени, телефона и данных об автомобиле — чтобы со мной связались по этой заявке. С <a href="privacy.html" target="_blank" rel="noopener">политикой обработки персональных данных</a> ознакомлен.</span></label>
+  <label class="check"><input type="checkbox" name="pd_consent" required><span>Даю <a href="soglasie.html" target="_blank" rel="noopener">согласие на обработку персональных данных</a>, чтобы со мной связались по этой заявке.</span></label>
+  <p class="hint consent-pol">Как мы обращаемся с данными — в <a href="privacy.html" target="_blank" rel="noopener">политике обработки персональных данных</a>.</p>
   <p class="hint consent-hint">Отметьте согласие, чтобы отправить заявку</p>
   <input type="hidden" name="ym_client_id" value="">
   <input type="hidden" name="utm_source" value=""><input type="hidden" name="utm_medium" value=""><input type="hidden" name="utm_campaign" value=""><input type="hidden" name="utm_content" value=""><input type="hidden" name="utm_term" value=""><input type="hidden" name="yclid" value="">

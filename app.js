@@ -37,6 +37,18 @@
       inc: ['То же, что «Стандарт», составы с цинком ', ['[ВСТАВКА В-13: материал — от Артёма]']],
       incShort: 'снятие колёс, подкрылков и защиты · мойка и сушка · днище и арки, скрытые полости — составы с цинком' }
   };
+  /* Кадры пакетов (v4, проход 3): один и тот же кроссовер на подъёмнике, вид снизу; 320 px — миниатюра на телефоне, 600 px — карточка */
+  var PK_PIC = {
+    bottom: ['minimum', 'Белый кроссовер на подъёмнике, вид снизу: обработано только днище, колёса и подкрылки на месте'],
+    standard: ['standard', 'Белый кроссовер на подъёмнике, вид снизу: колёса и подкрылки сняты, днище и арки в ровном чёрном матовом покрытии'],
+    antishum: ['antishum', 'Белый кроссовер на подъёмнике, вид снизу: в арках толстый шумопоглощающий слой, днище в ровном покрытии'],
+    zinc: ['zinc', 'Белый кроссовер на подъёмнике, вид снизу: днище и арки в тёмном стально-графитовом покрытии с цинком']
+  };
+  function pkgPic(id, cls, sizes) {
+    var p = PK_PIC[id], b = 'img/pkg-' + p[0];
+    return h('span', { class: cls }, h('img', { src: b + '-600.webp', srcset: b + '-320.webp 320w, ' + b + '-600.webp 600w', sizes: sizes,
+      width: '600', height: '450', alt: p[1], loading: 'lazy', decoding: 'async' }));
+  }
   var FORM_RU = { calc: 'калькулятор', quiz: 'подбор пакета по вопросам', contact: 'контакты', no_model: 'калькулятор, «моей модели нет»' };
 
   /* ---------- Утилиты ---------- */
@@ -131,9 +143,10 @@
 
   /* ---------- Цели Метрики (заглушка) ---------- */
   var goals = [];
+  var ymOn = false, ymClientId = '';   /* Метрика загружена и согласие есть (см. initCookie) */
   function goal(name, params) {
     goals.push(name);
-    if (window.ym && CONFIG.ymId) window.ym(CONFIG.ymId, 'reachGoal', name, params);
+    if (ymOn && window.ym) window.ym(CONFIG.ymId, 'reachGoal', name, params);   /* только после «Принять» (D11) */
   }
   document.addEventListener('click', function (e) {
     var t = e.target.closest && e.target.closest('[data-goal]');
@@ -305,8 +318,11 @@
       var card = h('label', { class: 'pkg' },
         h('input', { type: 'radio', name: 'pkg', value: id }),
         h('span', { class: 'pkg-body' },
-          h('span', { class: 'pkg-name', text: p.name }, p.note ? h('small', { class: 'pkg-note', text: p.note }) : null),
-          h('span', { class: 'pkg-who', text: p.who }),
+          h('span', { class: 'pkg-head' },
+            pkgPic(id, 'pkg-pic', '(min-width:900px) 330px, (min-width:600px) 260px, 112px'),
+            h('span', { class: 'pkg-ttl' },
+              h('span', { class: 'pkg-name', text: p.name }, p.note ? h('small', { class: 'pkg-note', text: p.note }) : null),
+              h('span', { class: 'pkg-who', text: p.who }))),
           incEl,
           h('span', { class: 'pkg-inc' }, 'Срок: ', ['[ВСТАВКА В-11: N часов — от Артёма]', 'hours'], ' ч'),
           price));
@@ -416,10 +432,20 @@
     var d = h('details', { class: 'res-fold' }, h('summary', { text: title }), body);
     return d;
   }
+  /* Картинка выбранной модели (v4, проход 3): грузится только для неё; у модели без картинки или при ошибке загрузки блока нет вовсе */
+  function carPic() {
+    var m = curModel(), b = curBrand();
+    if (S.custom || !m || !m.i) return null;
+    var img = h('img', { src: 'img/cars/' + b.slug + '-' + m.s + '.webp', width: '523', height: '350', alt: carName(b, m), loading: 'lazy', decoding: 'async' });
+    var box = h('div', { class: 'res-car' }, img);
+    img.addEventListener('error', function () { if (box.parentNode) box.parentNode.removeChild(box); });
+    return box;
+  }
   function renderResult() {
     var cls = curClass(), r = el.resBody;
     clear(r);
     if (!cls) { el.formWrap.hidden = true; r.appendChild(h('p', { class: 'res-empty', text: 'Выберите марку и модель — здесь появится цена.' })); return; }
+    var cp0 = carPic(); if (cp0) r.appendChild(cp0);
     if (!S.pkg) { el.formWrap.hidden = true; r.appendChild(h('p', { class: 'res-empty', text: 'Выберите пакет — здесь появится итог с ценой и составом работ.' })); return; }
     var t = total(S.pkg, cls, S.arches), inc = PK[S.pkg].incShort + (S.arches && S.pkg !== 'bottom' ? ' · шумоизоляция арок' : '');
     r.appendChild(h('p', { class: 'res-title', text: carLabel() + ' · ' + pkgLabel() }));
@@ -442,11 +468,6 @@
     var sh = h('button', { class: 'btn btn-ghost', type: 'button', text: 'Отправить в Telegram' });
     sh.addEventListener('click', shareTg);
     r.appendChild(h('div', { class: 'res-btns' }, go, cp, sh, st));
-    r.appendChild(h('div', { class: 'res-q' },
-      h('a', { href: '#q-smell' }, 'Запах — от ', ['[ВСТАВКА В-19: N]', 'odor_from'], ' до ', ['[ВСТАВКА В-19: M]', 'odor_to'], ' дней, расскажем, как проветрить'),
-      h('a', { href: '#q-cavity' }, 'Полости — список зон по вашей машине'),
-      h('a', { href: '#q-conveyor' }, 'Одна машина — один пост на весь день ', ['[ВСТАВКА В-21: подтвердить у Артёма]']),
-      h('a', { href: '#q-queue' }, 'Ближайшая запись — ', ['[ВСТАВКА В-09: через N дней / на ближайшие дни — от Артёма]', 'nearest'])));
     applyCfg(r);
   }
 
@@ -539,6 +560,10 @@
     return d.length === 10;
   }
 
+  /* Ник Telegram: без пробелов и «@» по краям; допустимы латиница, цифры и «_» (формат — данные Telegram, длину не проверяем) */
+  function cleanNick(v) { return String(v).trim().replace(/^@+/, ''); }
+  function nickOk(v) { return /^[A-Za-z0-9_]{1,32}$/.test(cleanNick(v)); }
+
   function initForm(form, type, getCtx) {
     var slot = $('.consent', form);
     if (slot) slot.appendChild($('#tpl-consent').content.cloneNode(true));
@@ -547,6 +572,15 @@
     var cb = form.elements.pd_consent, btn = $('button[type=submit]', form), hint = $('.consent-hint', form), ph = form.elements.phone, er = $('.err', form);
     function sync() { btn.disabled = !cb.checked; hint.hidden = cb.checked; }
     cb.addEventListener('change', sync); sync();
+    syncClientId();
+    /* Ник в Telegram (M3): поле необязательное, видно только при способе связи «Telegram» */
+    var nickBox = $('.nick', form), nick = form.elements.tg_nick, nickErr = $('.nick-err', form);
+    if (nickBox && nick) {
+      var syncNick = function () { nickBox.hidden = form.elements.contact_method.value !== 'Telegram'; };
+      $$('input[name=contact_method]', form).forEach(function (r) { r.addEventListener('change', syncNick); });
+      nick.addEventListener('input', function () { nickErr.hidden = true; nick.removeAttribute('aria-invalid'); });
+      syncNick();
+    }
     ph.addEventListener('input', function () { er.hidden = true; ph.removeAttribute('aria-invalid'); });
     /* Отправка только через общую проверку: у формы method="dialog" (вне окна ничего не отправляет),
        а программный submit() переводим на requestSubmit(), чтобы сработала проверка согласия. */
@@ -558,6 +592,9 @@
       if (!cb.checked) { hint.hidden = false; cb.focus(); return; }
       if (!phoneOk(ph.value)) {
         er.textContent = 'Введите телефон полностью: например, +7 900 000-00-00'; er.hidden = false; ph.setAttribute('aria-invalid', 'true'); ph.focus(); return;
+      }
+      if (nickBox && !nickBox.hidden && cleanNick(nick.value) && !nickOk(nick.value)) {
+        nickErr.textContent = 'Ник пишется латиницей, без пробелов: например, @nickname'; nickErr.hidden = false; nick.setAttribute('aria-invalid', 'true'); nick.focus(); return;
       }
       busy = true; var label = btn.textContent;
       btn.disabled = true; btn.textContent = 'Отправляем…'; form.setAttribute('aria-busy', 'true');
@@ -581,11 +618,12 @@
       package: pkg || '', arches: !!(ctx.arches && pkg && pkg !== 'bottom'),
       price_shown: t, price_version: D.version, calc_link: ctx.link || '',
       name: v('name'), phone: v('phone'), contact_method: v('contact_method'),
+      tg_nick: v('contact_method') === 'Telegram' && cleanNick(v('tg_nick')) ? '@' + cleanNick(v('tg_nick')) : '',
       car_age: ctx.car_age != null ? ctx.car_age : v('car_age'),
       underbody_state: ctx.underbody_state != null ? ctx.underbody_state : v('underbody_state'),
       prior_treatment: ctx.prior_treatment || '', priority: ctx.priority || '',
       utm_source: v('utm_source'), utm_medium: v('utm_medium'), utm_campaign: v('utm_campaign'), utm_content: v('utm_content'), utm_term: v('utm_term'), yclid: v('yclid'),
-      metrika_client_id: v('ym_client_id'),
+      metrika_client_id: ymOn ? (ymClientId || v('ym_client_id')) : '',   /* только при согласии на cookie (D11) */
       page_url: location.href.split('#')[0], referrer: document.referrer || '',
       pd_consent: !!form.elements.pd_consent.checked, pd_consent_at: p.day + '.' + p.month + '.' + p.year + ' ' + p.hour + ':' + p.minute + ' МСК', policy_version: CONFIG.policyVersion
     };
@@ -597,6 +635,7 @@
     var car = l.model_custom ? l.model_custom + ' (класс выбран клиентом: ' + l.class_name + ')' : (l.brand ? joinName(l.brand, l.model) + ', класс: ' + l.class_name : 'не указана');
     var lines = ['Новая заявка ' + l.lead_id + ' от ' + l.created_at, 'Имя: ' + (l.name || 'не указано'), 'Телефон: ' + l.phone];
     if (l.contact_method) lines.push('Как связаться: ' + l.contact_method);
+    if (l.tg_nick) lines.push('Ник в Telegram: ' + l.tg_nick);
     lines.push('Машина: ' + car);
     if (pk) lines.push('Пакет: ' + pk);
     if (l.price_shown != null && l.price_shown !== '') lines.push('Цена в расчёте: ' + rub(l.price_shown));
@@ -729,6 +768,7 @@
   function renderQuizResult() {
     var pi = Q.a[3] == null ? 1 : Q.a[3], id = Q_PKG[pi], car = qCar();
     qBody.appendChild(h('h3', { tabindex: '-1', text: 'Вам подойдёт пакет «' + PK[id].name + '»' }));
+    qBody.appendChild(pkgPic(id, 'q-pic', '(min-width:900px) 360px, (min-width:600px) 480px, 92vw'));
     var why = h('div', { class: 'q-extra' }, h('p', { text: Q_WHY[pi] + ' Точнее скажем на осмотре: посмотрим днище и покажем вам.' }));
     if ((Q.a[0] === 0 || Q.a[0] === 1) && id === 'bottom') why.appendChild(h('p', null, 'Для новой машины подойдёт Стандарт или Антишум: заводская защита, как правило, закрывает не все зоны ', ['[ВСТАВКА В-25: формулировка уточняется — от Артёма]'], '. Покажем на осмотре, что есть на вашей машине. Решать вам.'));
     if (Q.a[1] === 2) why.appendChild(h('p', { text: 'Сначала посмотрим днище: возможно, нужна зачистка, и цена изменится. Скажем до начала работ.' }));
@@ -764,24 +804,62 @@
   }
 
   /* ---------- Прочее ---------- */
+  /* ---------- Cookie и Яндекс Метрика (v5 D11, «как в Тильде») ----------
+     Выбор хранится в localStorage: '1' — «Принять», '0' — «Отклонить». Ключ новый: старая отметка «Понятно» (ak_cookie)
+     касалась только технических данных и согласием на Метрику не считается.
+     Код Метрики не загружается вовсе, пока нет «Принять»; номер счётчика — CONFIG.ymId (В-60). */
+  var CK = 'ak_cookie_v2', cookieChoice = null;
+  function readChoice() { try { var v = localStorage.getItem(CK); return v === '1' ? true : v === '0' ? false : null; } catch (e) { return null; } }
+  function syncClientId() { $$('input[name=ym_client_id]').forEach(function (i) { i.value = ymOn ? ymClientId : ''; }); }
+  function loadMetrika() {
+    var id = parseInt(CONFIG.ymId, 10);
+    if (ymOn || !id) return;
+    ymOn = true;
+    window['disableYaCounter' + id] = false;
+    (function (m, e, t, r, i) {
+      m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments); };
+      m[i].l = 1 * new Date();
+      var k = e.createElement(t); k.async = 1; k.src = r; e.head.appendChild(k);
+    })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js', 'ym');
+    window.ym(id, 'init', { clickmap: true, trackLinks: true, accurateTrackBounce: true });
+    window.ym(id, 'getClientID', function (v) { if (ymOn) { ymClientId = v; syncClientId(); } });
+  }
+  /* Отказ: больше не вызываем Метрику, чистим её cookie «_ym…» на нашем домене (чужие, yandex.ru, браузер не даёт);
+     уже загруженный скрипт полностью отключится со следующей загрузки страницы */
+  function stopMetrika() {
+    var id = parseInt(CONFIG.ymId, 10);
+    ymOn = false; ymClientId = ''; syncClientId();
+    if (id) window['disableYaCounter' + id] = true;
+    var parts = location.hostname.split('.'), doms = [''], i;
+    for (i = 0; i < parts.length - 1; i++) doms.push('; domain=' + parts.slice(i).join('.'));
+    document.cookie.split(';').forEach(function (c) {
+      var n = c.split('=')[0].trim();
+      if (n.indexOf('_ym') === 0) doms.forEach(function (d) { document.cookie = n + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/' + d; });
+    });
+  }
   function initCookie() {
-    var b = $('#cookie'), ok = false;
-    try { ok = localStorage.getItem('ak_cookie') === '1'; } catch (e) { /* нет хранилища */ }
-    b.hidden = true;
-    if (ok) return;
-    function show() { b.hidden = false; document.body.classList.add('has-cookie'); }
+    var b = $('#cookie');
+    function show(focus) { b.hidden = false; document.body.classList.add('has-cookie'); if (focus) $('#cookie-ok').focus(); }
+    function hide() { b.hidden = true; document.body.classList.remove('has-cookie'); }
+    function choose(yes) {
+      cookieChoice = yes;
+      try { localStorage.setItem(CK, yes ? '1' : '0'); } catch (e) { /* нет хранилища: выбор действует до закрытия страницы */ }
+      if (yes) loadMetrika(); else stopMetrika();
+      hide();
+    }
+    hide();
+    cookieChoice = readChoice();
+    if (cookieChoice === true) loadMetrika();
+    $('#cookie-ok').addEventListener('click', function () { choose(true); });
+    $('#cookie-no').addEventListener('click', function () { choose(false); });
+    $$('[data-cookie-settings]').forEach(function (a) { a.addEventListener('click', function () { show(true); }); });
+    if (location.hash === '#cookie-settings') { show(false); return; }
+    if (cookieChoice !== null) return;
     /* На телефоне плашка не должна закрывать поля первого экрана: показываем её после первой прокрутки */
     if (window.matchMedia && window.matchMedia('(max-width: 599px)').matches) {
-      var once = function () { if (window.pageYOffset > 120) { window.removeEventListener('scroll', once); show(); } };
+      var once = function () { if (window.pageYOffset > 120) { window.removeEventListener('scroll', once); if (cookieChoice === null) show(false); } };
       window.addEventListener('scroll', once, { passive: true });
-    } else show();
-    $('#cookie-ok').addEventListener('click', function () { b.hidden = true; document.body.classList.remove('has-cookie'); try { localStorage.setItem('ak_cookie', '1'); } catch (e) { /* нет хранилища */ } });
-  }
-  function initMetrikaId() {
-    /* ЗАГЛУШКА: когда владелец даст номер счётчика и подключит код, поле уйдёт вместе с заявкой в CRM. */
-    if (window.ym && CONFIG.ymId) {
-      window.ym(CONFIG.ymId, 'getClientID', function (id) { $$('input[name=ym_client_id]').forEach(function (i) { i.value = id; }); });
-    }
+    } else show(false);
   }
 
   function init() {
@@ -797,7 +875,6 @@
     initThanks();
     renderQuiz(false);
     render();
-    initMetrikaId();
     initCookie();
     applyCfg(document);
     if (fromUrl) setTimeout(function () { scrollTo($('#calc')); }, 50);
