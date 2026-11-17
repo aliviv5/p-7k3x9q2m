@@ -41,26 +41,27 @@
       if (r.width > 0) set((x - r.left) / r.width * 100);
     }
 
-    var dragging = false, activeId = null;   // ведёт один указатель: второй палец и его отпускание жест не меняют
-    view.addEventListener('pointerdown', function (e) {
+    var dragging = false, activeId = null, grabOffset = 0;   // только ручка; захват с сохранением смещения, один указатель
+    handle.addEventListener('pointerdown', function (e) {
       if (dragging) return;
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       dragging = true; activeId = e.pointerId;
+      var bounds = view.getBoundingClientRect();
+      grabOffset = e.clientX - (bounds.left + bounds.width * pos / 100);
       root.classList.remove('ba--key');
       root.classList.add('ba--drag');
-      try { view.setPointerCapture(e.pointerId); } catch (err) { /* нет захвата — не страшно */ }
-      fromX(e.clientX);
+      try { handle.setPointerCapture(e.pointerId); } catch (err) { /* нет захвата — не страшно */ }
       if (e.pointerType === 'mouse') e.preventDefault();
       handle.focus({ preventScroll: true });
     });
-    view.addEventListener('pointermove', function (e) { if (dragging && e.pointerId === activeId) fromX(e.clientX); });
+    handle.addEventListener('pointermove', function (e) { if (dragging && e.pointerId === activeId) fromX(e.clientX - grabOffset); });
     function stop(e) {
       if (e && e.pointerId !== activeId) return;
       dragging = false; activeId = null; root.classList.remove('ba--drag');
     }
-    view.addEventListener('pointerup', stop);
-    view.addEventListener('pointercancel', stop);
-    view.addEventListener('lostpointercapture', stop);
+    handle.addEventListener('pointerup', stop);
+    handle.addEventListener('pointercancel', stop);
+    handle.addEventListener('lostpointercapture', stop);
 
     handle.addEventListener('keydown', function (e) {
       var step = e.shiftKey ? 20 : 5, v = null;

@@ -6,8 +6,10 @@
    (.dark — по умолчанию, .light). Замена цветов = правка этого блока, остальной файл их не повторяет.
    Ритм: тёмные и светлые секции чередуются, как в макете клиента. Теснота — враг: воздух внутри блоков задан токенами
    --head-gap (шапка блока → содержимое), --pad (поля карточки), --gap (между карточками). */
-/* Montserrat ExtraBold: файл лежит рядом (fonts/), лицензия SIL OFL 1.1 — fonts/NOTICE-Montserrat-OFL.txt. Внешних загрузок нет. */
+/* Manrope: локальный вариативный шрифт с кириллицей, SIL OFL 1.1.
+   prepare-preview.py сохраняет шрифт и лицензию до сборки. Внешних загрузок у посетителя нет. */
 @font-face{font-family:Montserrat;font-weight:800;font-style:normal;font-display:swap;src:url(fonts/Montserrat-ExtraBold.woff2) format("woff2")}
+@font-face{font-family:Manrope;font-weight:200 800;font-style:normal;font-display:swap;src:url(fonts/Manrope-Variable.ttf) format("truetype")}
 :root{
   /* --- палитра (временная) --- */
   --brand:#F57135; --brand-hover:#FF8650; --on-brand:#14110F; --accent-2:#5CC4D6;   /* стиль-карта Льва Давыдовича, «Цветовая система v4»: один акцент — оранжевый; текст на оранжевой кнопке тёмный #14110F (6,53 : 1); бирюзовый --accent-2 — ТОЛЬКО рамка фокуса на тёмном */
@@ -21,7 +23,7 @@
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px; --s9:96px;
   --sec-y:var(--s8); --head-gap:var(--s6); --pad:var(--s5); --gap:var(--s4);
   --tap:48px; --btn-h:56px; --hdr:64px; --dock:0px; --bw:1px; --bw-2:2px; --r:12px; --r-lg:20px; --measure:64ch; --measure-lead:56ch; --wrap:1200px; --list-h:280px;
-  --font-h:Montserrat,"Arial Black","Segoe UI Black",system-ui,sans-serif; --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-h:Manrope,"Arial Black","Segoe UI Black",system-ui,sans-serif; --font:Manrope,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   /* --- тема секции (по умолчанию тёмная) --- */
   --sec-bg:var(--bg); --text:var(--ink); --text-soft:var(--ink-soft); --text-muted:var(--muted); --card:var(--surface); --field:var(--surface-2);
   --rule:var(--line); --rule-hi:var(--line-hi); --link:var(--brand); --link-hover:var(--brand-hover); --accent-text:var(--brand); --focus:var(--accent-2); --error:var(--err);
@@ -101,8 +103,8 @@ p{max-width:var(--measure)}
 .hero{position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;background:var(--bg);color:var(--ink);min-height:calc(100vh - var(--hdr));min-height:calc(100svh - var(--hdr))}
 .hero-in{padding-block:var(--s6) var(--s5)}
 .hero-pic{position:absolute;inset:0;z-index:-1;display:block;overflow:hidden}
-.hero-pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 100%}
-.hero-pic::after{content:"";position:absolute;inset:0 0 auto 0;height:78%;background:linear-gradient(180deg,rgba(15,18,21,.9) 0,rgba(15,18,21,.82) 62%,rgba(15,18,21,0) 100%)}   /* телефон: подложка доходит до ссылки «Как проходит обработка» (контраст >= 4,5 : 1) */
+.hero-pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 100%;filter:brightness(1.65) contrast(.88)}
+.hero-pic::after{content:none}
 .eyebrow{margin-bottom:var(--s4);color:var(--ink-soft);font-size:var(--fs-1);font-weight:600;letter-spacing:.03em;overflow-wrap:anywhere;max-width:none}
 .hero h1{font-size:var(--fs-5)}
 .hl{color:var(--brand)}
@@ -464,7 +466,7 @@ dialog::backdrop{background:rgba(0,0,0,.7)}
   .hero{flex-direction:row;align-items:center}
   .hero-pic{position:absolute;inset:0;z-index:-1;min-height:0;flex:none;order:0}
   .hero-pic img{object-position:70% 35%}
-  .hero-pic::after{inset:0;height:auto;background:linear-gradient(90deg,rgba(15,18,21,.94) 0,rgba(15,18,21,.8) 38%,rgba(15,18,21,0) 74%)}
+  .hero-pic::after{content:none}
   .hero-in{padding-block:var(--s9)}
   .hero-text{max-width:calc(var(--s9) * 6)}
   .hero h1{font-size:var(--fs-7)}
@@ -669,3 +671,45 @@ input[type=text]:focus-visible,input[type=tel]:focus-visible,select:focus-visibl
 .res-car{--car-h:160px;height:var(--car-h);margin-bottom:var(--s4);display:flex;justify-content:center}
 .res-car img{display:block;max-width:100%;max-height:100%;width:auto;height:100%;object-fit:contain}
 @media (min-width:900px){.res-car{--car-h:176px}}
+
+/* Клиентские правки 17.11.2026: единая гарнитура, светлый первый экран, компактные блоки. */
+.hero h1{text-transform:none;letter-spacing:-.025em;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+.hero .eyebrow,.hero-offer{text-shadow:0 1px 5px rgba(0,0,0,.7)}
+.hero .eyebrow{font-size:14px;font-weight:600}
+.hero-offer{margin-top:var(--s4);font-size:var(--fs-2);font-weight:600;line-height:1.75;color:var(--ink)}
+.offer-badge{position:relative;isolation:isolate;display:inline-block;padding:0 var(--s3);margin-right:var(--s1);color:var(--on-brand);font:inherit;text-shadow:none;white-space:nowrap}
+.offer-badge::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--brand);clip-path:polygon(10% 0,100% 0,90% 100%,0 100%)}
+.facts li{align-items:start}
+.facts svg{margin-top:var(--s1)}
+.why-card{padding:var(--s5)}
+.why-card h3{margin-bottom:var(--s2)}
+.why-card p{color:var(--text-soft)}
+.cmp-mobile-label{margin-top:var(--s6);font-size:var(--fs-4)}
+.cmp-mobile-copy{display:inline}
+.cmp-desktop-copy{display:none}
+.warranty-passport img{aspect-ratio:3/2;object-fit:contain}
+.warranty-passport figcaption{margin-top:var(--s2);color:var(--text-muted);font-size:var(--fs-1)}
+.passport-note{margin-top:var(--s5);max-width:var(--measure)}
+@media (min-width:600px){
+  .facts{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:var(--s1)}
+  .facts li{display:grid;grid-template-columns:var(--s7) minmax(0,1fr);grid-template-rows:subgrid;grid-row:span 2;column-gap:var(--s5);row-gap:var(--s1)}
+  .facts p{display:contents}
+  .facts svg{grid-column:1;grid-row:1 / 3}
+  .facts strong{grid-column:2;grid-row:1}
+  .facts p>span{grid-column:2;grid-row:2}
+}
+@media (min-width:600px) and (max-width:899px){
+  .facts{grid-template-columns:1fr}
+  .facts li{border-left:0;border-top:var(--bw) solid var(--rule);padding-inline:0}
+  .facts li:first-child{border-top:0}
+}
+@media (min-width:900px){
+  .cmp-mobile-label,.cmp-mobile-copy{display:none}
+  .cmp-desktop-copy{display:inline}
+}
+@media (max-width:899px){
+  .cmp tbody td:nth-child(2){display:none}
+  .cmp{counter-reset:question}
+  .cmp th[scope=row]{counter-increment:question;position:relative;padding-left:var(--s7)}
+  .cmp th[scope=row]::before{content:counter(question,decimal-leading-zero);position:absolute;left:0;top:var(--s1);color:var(--accent-text);font-weight:800}
+}
