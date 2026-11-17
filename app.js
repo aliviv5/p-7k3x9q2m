@@ -975,3 +975,22 @@
     }
   });
 })();
+
+/* FAQ: один открытый ответ, включая браузеры без поддержки details[name]. */
+(function () {
+  'use strict';
+  function initFaqAccordion() {
+    var faq = document.querySelector('#faq .faq-list');
+    if (!faq) return;
+    faq.addEventListener('toggle', function (event) {
+      var opened = event.target;
+      if (opened.tagName !== 'DETAILS' || !opened.open || opened.parentNode !== faq) return;
+      var answers = faq.querySelectorAll('details[open]');
+      for (var i = 0; i < answers.length; i++) {
+        if (answers[i] !== opened) answers[i].open = false;
+      }
+    }, true);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initFaqAccordion);
+  else initFaqAccordion();
+})();
