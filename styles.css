@@ -790,3 +790,13 @@ h3,.why-card h3{font-size:clamp(18px,4.8vw,22px);line-height:1.35}
 @media (max-width:599px){
   .process .scg{--scg-track-h:calc(100svh - var(--hdr) - var(--dock));--scg-step:60svh;overflow-anchor:none}
 }
+
+/* Два связанных кадра слева от FAQ на компьютере. */
+.faq-media{display:grid;gap:var(--s5);margin-top:var(--head-gap);min-width:0}
+#faq .faq-media .aside-pic{margin:0}
+.faq-extra{display:none}
+@media (min-width:900px){
+  #faq .faq-media{grid-column:1;grid-row:2;align-self:start;margin-top:var(--s6)}
+  #faq .faq-media .aside-pic{grid-column:auto;grid-row:auto}
+  .faq-extra{display:block}
+}
