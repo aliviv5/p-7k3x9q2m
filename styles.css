@@ -799,3 +799,12 @@ h3,.why-card h3{font-size:clamp(18px,4.8vw,22px);line-height:1.35}
   #faq .faq-media .aside-pic{grid-column:auto;grid-row:auto}
   .faq-extra{display:block}
 }
+
+/* Mobile class picker: compact rows with a shared image column. */
+@media (max-width:599px){
+  .sil-grid{grid-template-columns:minmax(0,1fr)}
+  .sil span{grid-template-columns:clamp(64px,20vw,96px) minmax(0,1fr);grid-template-rows:1fr auto;column-gap:var(--s3);row-gap:var(--s1);align-content:center;align-items:center;overflow-wrap:normal;line-height:1.4}
+  .sil img{grid-column:1;grid-row:1/3;align-self:center}
+  .sil strong{grid-column:2;grid-row:1;align-self:end;font-size:14px}
+  .sil .sil-example{grid-column:2;grid-row:2;align-self:start}
+}
