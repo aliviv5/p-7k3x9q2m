@@ -624,7 +624,7 @@ input[type=text]:focus-visible,input[type=tel]:focus-visible,select:focus-visibl
    Маска относится только к сцене и не скрывает текст; короткие окна и reduced-motion
    используют исходный статичный список компонента. */
 @media (max-width:599px){
-  .process .scg{--m-cw:min(92vw,calc((var(--scg-pin-h) - 330px) * var(--scg-ratio)))}
+  .process .scg{--m-cw:min(92vw,calc((var(--scg-track-h,var(--scg-pin-h)) - 330px) * var(--scg-ratio)))}
   .process .scg:not(.scg--static) .scg__pin{display:flex;flex-direction:column;align-items:stretch;padding-top:var(--s7)}
   .process .scg:not(.scg--static) .scg__stage{position:relative;inset:auto;flex:1;min-height:0;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 20%,#000 80%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 20%,#000 80%,transparent)}
   .process .scg:not(.scg--static) .scg__card{top:50%;width:var(--m-cw)}
@@ -777,4 +777,16 @@ h3,.why-card h3{font-size:clamp(18px,4.8vw,22px);line-height:1.35}
 @media (max-width:599px){.passport-details{display:none}}
 @media (max-width:899px){
   .cmp th[scope=row]::before{font-family:var(--font-h);font-size:24px;font-weight:600;line-height:1.2}
+}
+
+/* Вопросы независимы от высоты заголовка и фото в соседней колонке. */
+.faq-list{min-width:0;margin-top:var(--head-gap)}
+@media (min-width:900px){
+  #faq .faq-list{grid-column:2;grid-row:1 / 3;margin-top:0}
+  #faq .aside-pic{grid-row:2;align-self:start}
+}
+
+/* A stable mobile scroll track; only the pinned viewport follows browser chrome. */
+@media (max-width:599px){
+  .process .scg{--scg-track-h:calc(100svh - var(--hdr) - var(--dock));--scg-step:60svh;overflow-anchor:none}
 }

@@ -500,10 +500,22 @@
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    var resizeTimer = 0;
+    var resizeTimer = 0, lastWidth = window.innerWidth;
     function onResize() {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function () { applyMode(); }, 80);
+      resizeTimer = setTimeout(function () {
+        var widthChanged = window.innerWidth !== lastWidth;
+        lastWidth = window.innerWidth;
+        if (widthChanged || (reduce.matches || tooLow()) !== isStatic) {
+          applyMode();
+        } else if (!isStatic) {
+          /* Browser chrome changed height, not the gallery's scroll progress.
+             Keep cur and easing instead of snapping to the target mid-gesture. */
+          measure();
+          target = readTarget();
+          kick();
+        }
+      }, 80);
     }
     window.addEventListener('resize', onResize);
     if (window.visualViewport) window.visualViewport.addEventListener('resize', onResize);

@@ -33,7 +33,7 @@
   width: 100%;
   color: var(--scg-ink);
   background: var(--scg-bg);
-  margin-bottom: calc(var(--scg-pin-h) * var(--scg-curtain, 0) * -1);   /* следующий блок поднимается на сцену */
+  margin-bottom: calc(var(--scg-track-h, var(--scg-pin-h)) * var(--scg-curtain, 0) * -1);   /* следующий блок поднимается на сцену */
 }
 @supports (height: 100svh) {
   :where(.scg) { --scg-pin-h: calc(100svh - var(--scg-top)); }
@@ -43,7 +43,7 @@
    (у следующего блока нужны position:relative, z-index:1 и непрозрачный фон): пустого экрана нет */
 .scg__track {
   position: relative;
-  height: calc(var(--scg-pin-h) * (1 + var(--scg-curtain, 0)) + var(--scg-step) * (var(--scg-n, 4) - 1 + var(--scg-end, .3) + .06));
+  height: calc(var(--scg-track-h, var(--scg-pin-h)) * (1 + var(--scg-curtain, 0)) + var(--scg-step) * (var(--scg-n, 4) - 1 + var(--scg-end, .3) + .06));
 }
 .scg__pin {
   position: sticky;
