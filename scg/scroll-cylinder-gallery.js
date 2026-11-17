@@ -260,6 +260,30 @@
     stepProbe.style.cssText = 'position:absolute;left:0;top:0;width:0;height:var(--scg-step);visibility:hidden;pointer-events:none';
     root.appendChild(stepProbe);
     function measure() {
+      /* Reserve the tallest mobile caption so the count and controls never jump
+         when steps have different text lengths or the webfont finishes loading. */
+      root.style.removeProperty('--scg-caption-h');
+      if (window.matchMedia('(max-width: 599px)').matches && !isStatic) {
+        var width = cap.getBoundingClientRect().width;
+        if (width > 0) {
+          var sample = make('div', 'scg__cap');
+          sample.setAttribute('aria-hidden', 'true');
+          sample.style.cssText = 'position:absolute;left:0;top:0;visibility:hidden;pointer-events:none;transform:none;min-height:0;height:auto;width:' + width + 'px';
+          var sampleTitle = make('span', 'scg__title');
+          var sampleText = make('span', 'scg__text');
+          sample.appendChild(sampleTitle);
+          sample.appendChild(sampleText);
+          root.appendChild(sample);
+          var tallest = 0;
+          items.forEach(function (item) {
+            sampleTitle.textContent = item.title || '';
+            sampleText.textContent = item.text || '';
+            tallest = Math.max(tallest, sample.getBoundingClientRect().height);
+          });
+          root.removeChild(sample);
+          root.style.setProperty('--scg-caption-h', Math.ceil(tallest) + 'px');
+        }
+      }
       cardH = cards[0].node.offsetHeight;
       pinH = pin.offsetHeight;
       stuck = parseFloat(getComputedStyle(pin).top) || 0;
@@ -476,11 +500,17 @@
 
     window.addEventListener('scroll', onScroll, { passive: true });
     var resizeTimer = 0;
-    window.addEventListener('resize', function () {
+    function onResize() {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(function () { applyMode(); }, 80);
-    });
+    }
+    window.addEventListener('resize', onResize);
+    if (window.visualViewport) window.visualViewport.addEventListener('resize', onResize);
     window.addEventListener('load', function () { if (!isStatic) snap(); });
+    if (document.fonts) {
+      document.fonts.ready.then(function () { if (!isStatic) snap(); });
+      if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', function () { if (!isStatic) snap(); });
+    }
     if (reduce.addEventListener) reduce.addEventListener('change', applyMode);
     else if (reduce.addListener) reduce.addListener(applyMode);
     if (low.addEventListener) low.addEventListener('change', applyMode);

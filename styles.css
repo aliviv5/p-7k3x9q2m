@@ -9,6 +9,7 @@
 /* Manrope: локальный вариативный шрифт с кириллицей, SIL OFL 1.1.
    prepare-preview.py сохраняет шрифт и лицензию до сборки. Внешних загрузок у посетителя нет. */
 @font-face{font-family:Montserrat;font-weight:800;font-style:normal;font-display:swap;src:url(fonts/Montserrat-ExtraBold.woff2) format("woff2")}
+@font-face{font-family:Unbounded;font-weight:200 900;font-style:normal;font-display:swap;src:url(fonts/Unbounded-Variable.ttf) format("truetype")}
 @font-face{font-family:Manrope;font-weight:200 800;font-style:normal;font-display:swap;src:url(fonts/Manrope-Variable.ttf) format("truetype")}
 :root{
   /* --- палитра (временная) --- */
@@ -23,7 +24,7 @@
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px; --s9:96px;
   --sec-y:var(--s8); --head-gap:var(--s6); --pad:var(--s5); --gap:var(--s4);
   --tap:48px; --btn-h:56px; --hdr:64px; --dock:0px; --bw:1px; --bw-2:2px; --r:12px; --r-lg:20px; --measure:64ch; --measure-lead:56ch; --wrap:1200px; --list-h:280px;
-  --font-h:Manrope,"Arial Black","Segoe UI Black",system-ui,sans-serif; --font:Manrope,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-h:Unbounded,Manrope,system-ui,sans-serif; --font:Manrope,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   /* --- тема секции (по умолчанию тёмная) --- */
   --sec-bg:var(--bg); --text:var(--ink); --text-soft:var(--ink-soft); --text-muted:var(--muted); --card:var(--surface); --field:var(--surface-2);
   --rule:var(--line); --rule-hi:var(--line-hi); --link:var(--brand); --link-hover:var(--brand-hover); --accent-text:var(--brand); --focus:var(--accent-2); --error:var(--err);
@@ -130,7 +131,9 @@ p{max-width:var(--measure)}
 .sec h2+.sub{margin-bottom:0}
 .glow{position:relative}   /* раньше правил с position:sticky (итог расчёта на широком экране) — они его перекрывают */
 .sec h2{max-width:26ch}
-.sec .wrap>h2+.sub,.sec .wrap>h2+*{margin-top:var(--s4)}
+.sec .wrap>h2+.sub{margin-top:var(--s4)}
+.sec .wrap>h2+:not(.sub):not(details){margin-top:var(--head-gap)}
+.sec .wrap>h2+details{margin-top:0}
 .sec h2{position:relative}
 /* акцент заголовка (v3, вернули по замечанию D1): вертикальная полоса слева, яркая в центре, к верху и низу гаснет, со свечением; висит в поле, текст остаётся по общей кромке.
    На белом — тот же рисунок от --accent-ink, свечение слабее */
@@ -690,19 +693,6 @@ input[type=text]:focus-visible,input[type=tel]:focus-visible,select:focus-visibl
 .warranty-passport img{aspect-ratio:3/2;object-fit:contain}
 .warranty-passport figcaption{margin-top:var(--s2);color:var(--text-muted);font-size:var(--fs-1)}
 .passport-note{margin-top:var(--s5);max-width:var(--measure)}
-@media (min-width:600px){
-  .facts{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:var(--s1)}
-  .facts li{display:grid;grid-template-columns:var(--s7) minmax(0,1fr);grid-template-rows:subgrid;grid-row:span 2;column-gap:var(--s5);row-gap:var(--s1)}
-  .facts p{display:contents}
-  .facts svg{grid-column:1;grid-row:1 / 3}
-  .facts strong{grid-column:2;grid-row:1}
-  .facts p>span{grid-column:2;grid-row:2}
-}
-@media (min-width:600px) and (max-width:899px){
-  .facts{grid-template-columns:1fr}
-  .facts li{border-left:0;border-top:var(--bw) solid var(--rule);padding-inline:0}
-  .facts li:first-child{border-top:0}
-}
 @media (min-width:900px){
   .cmp-mobile-label,.cmp-mobile-copy{display:none}
   .cmp-desktop-copy{display:inline}
@@ -712,4 +702,58 @@ input[type=text]:focus-visible,input[type=tel]:focus-visible,select:focus-visibl
   .cmp{counter-reset:question}
   .cmp th[scope=row]{counter-increment:question;position:relative;padding-left:var(--s7)}
   .cmp th[scope=row]::before{content:counter(question,decimal-leading-zero);position:absolute;left:0;top:var(--s1);color:var(--accent-text);font-weight:800}
+}
+
+/* Unbounded 600: реальные шрифты, плавная шкала размеров по ширине экрана. */
+h1,h2,h3,.why-card h3,.qgrid h3,.wgrid h3,.quiz h3,.process .scg__title,.pkg-name,.res-title,.ba__cap strong{
+  font-family:var(--font-h);font-weight:600;letter-spacing:-.025em;
+}
+h1,h2{line-height:1.2}
+h2{font-size:clamp(26px,6.9vw,34px)}
+h3,.why-card h3{font-size:clamp(18px,4.8vw,22px);line-height:1.35}
+.hero h1{font-size:clamp(30px,8.3vw,38px);line-height:1.18;font-weight:600;text-transform:uppercase;letter-spacing:-.035em}
+.hero-offer{font-size:clamp(18px,4.8vw,21px);line-height:1.65}
+.sub{font-size:18px;line-height:1.55}
+.btn{font-family:var(--font);font-weight:800}
+/* Три преимущества: простая сетка без subgrid. Иконки, заголовки и подписи на общих линиях. */
+.facts{grid-template-columns:1fr}
+.facts li{display:grid;grid-template-columns:48px minmax(0,1fr);align-items:start;gap:var(--s4);padding:var(--s5) 0;border-left:0}
+.facts li:first-child{padding-left:0}
+.facts svg{width:48px;height:48px;margin-top:0}
+.facts p{display:grid;gap:var(--s2);min-width:0}
+.facts strong{font-family:var(--font);font-weight:800;font-size:18px;line-height:1.4;letter-spacing:0;text-transform:none}
+.facts p>span{font-size:16px;line-height:1.5}
+@media (min-width:600px) and (max-width:899px){
+  .facts li{border-top:var(--bw) solid var(--rule)}
+  .facts li:first-child{border-top:0}
+}
+@media (min-width:900px){
+  :root{--fs-1:16px;--fs-2:18px}
+  h1{font-size:clamp(48px,4.5vw,64px)}
+  h2{font-size:clamp(36px,3.6vw,48px)}
+  h3,.why-card h3{font-size:24px}
+  .hero h1{font-size:clamp(48px,4.5vw,64px)}
+  .hero-text{max-width:min(780px,68vw)}
+  .hero-offer{font-size:24px}
+  .sub{font-size:22px}
+  .facts{grid-template-columns:repeat(3,minmax(0,1fr));gap:0}
+  .facts li{padding:var(--s6) var(--s5);border-top:0;border-left:var(--bw) solid var(--rule)}
+  .facts li:first-child{border-left:0;padding-left:0}
+  .facts strong{min-height:2.8em}
+  .process .scg__title{font-size:28px}
+  .process .scg__text{font-size:18px}
+}
+/* Высота сцены следует за реальным окном телефона, когда адресная строка прячется. */
+@supports (height:100dvh){
+  .process .scg{--scg-pin-h:calc(100dvh - var(--hdr) - var(--dock))}
+}
+@media (max-width:599px){
+  :root{--dock:calc(var(--btn-h) + max(var(--s5),env(safe-area-inset-bottom,0px)))}
+  .dock{bottom:max(var(--s3),env(safe-area-inset-bottom,0px))}
+  .process .scg:not(.scg--static) .scg__meta{margin:var(--s2) auto;gap:var(--s2)}
+  .process .scg:not(.scg--static) .scg__foot{display:grid;grid-template-columns:auto minmax(24px,62px) auto;align-items:center;gap:var(--s2);margin:0 auto var(--s2)}
+  .process .scg:not(.scg--static) .scg__progress{width:100%;min-width:0}
+  .process .scg:not(.scg--static) .scg__nav{margin:0}
+  .process .scg:not(.scg--static) .scg__cap{min-height:var(--scg-caption-h,0px)}
+  .process .scg:not(.scg--static) .scg__title{font-size:clamp(16px,4.3vw,18px);line-height:1.3;font-weight:600}
 }
