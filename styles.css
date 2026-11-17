@@ -217,13 +217,14 @@ summary{cursor:pointer;min-height:var(--tap);display:flex;align-items:center;fon
 .calc{display:grid;gap:var(--s7)}
 .calc-main{min-width:0}
 .custom{border:var(--bw) dashed var(--rule-hi);border-radius:var(--r-lg);padding:var(--pad);margin-block:var(--s4)}
-.sil-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s3)}
-.sil{position:relative;display:block;cursor:pointer;font-weight:400}
+.sil-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:1fr;gap:var(--s3)}
+.sil{position:relative;display:block;min-width:0;cursor:pointer;font-weight:400}
 .sil input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
-.sil span{display:grid;gap:var(--s2);padding:var(--s3);border:var(--bw) solid var(--rule);border-radius:var(--r);background:var(--field);font-size:var(--fs-1);height:100%;color:var(--text)}
+.sil span{display:grid;grid-template-rows:auto 1fr auto;align-content:start;min-width:0;overflow-wrap:anywhere;gap:var(--s2);padding:var(--s3);border:var(--bw) solid var(--rule);border-radius:var(--r);background:var(--field);font-size:var(--fs-1);height:100%;color:var(--text)}
 .sil input:checked+span{border-color:var(--brand);outline:var(--bw-2) solid var(--brand)}
 .sil input:focus-visible+span{outline:var(--bw-2) solid var(--focus);outline-offset:var(--s1)}
-.sil img{filter:none}
+.sil img{filter:none;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain;align-self:start}
+.sil .sil-example{font-size:12px;line-height:1.4;color:var(--text-muted)}
 .classbox{display:grid;grid-template-columns:1fr;gap:var(--s4);align-items:center;margin-block:var(--s4);padding:var(--pad);background:var(--card);border:var(--bw) solid var(--rule);border-radius:var(--r-lg);box-shadow:var(--shadow)}
 .classbox img{width:100%;max-width:240px;background:transparent}
 .classline{overflow-wrap:anywhere}
@@ -442,7 +443,6 @@ dialog::backdrop{background:rgba(0,0,0,.7)}
   .btn-lg{width:auto;justify-self:start;min-width:calc(var(--s9) * 2)}
   .shots{grid-template-columns:repeat(3,1fr);gap:var(--s6)}
   .pkg-grid{grid-template-columns:1fr 1fr}
-  .sil-grid{grid-template-columns:repeat(3,1fr)}
   .classbox{grid-template-columns:auto 1fr}
   .steps,.qgrid,.wgrid{grid-template-columns:1fr 1fr}
   .steps.steps-3{grid-template-columns:1fr}
@@ -482,7 +482,6 @@ dialog::backdrop{background:rgba(0,0,0,.7)}
   .shots{gap:var(--s7)}
   .calc{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);align-items:start;gap:var(--s8)}
   .calc-result{position:sticky;top:calc(var(--hdr) + var(--s4))}
-  .sil-grid{grid-template-columns:repeat(5,1fr)}
   .price-tbl{display:table}
   .tabs{display:none}
   .wgrid{grid-template-columns:repeat(2,minmax(0,1fr))}

@@ -346,11 +346,19 @@
     $('#custom-back').addEventListener('click', function () { setCustom(false); $('#calc-brand').focus(); });
     el.customText.addEventListener('input', function () { S.customText = el.customText.value; render(true); });
 
+    var classPhotos = {
+      AB: { file: 'hyundai-solaris', name: 'Hyundai Solaris' },
+      C: { file: 'geely-coolray', name: 'Geely Coolray' },
+      DE: { file: 'geely-atlas-pro', name: 'Geely Atlas Pro' },
+      SUV: { file: 'geely-monjaro', name: 'Geely Monjaro' },
+      PICKUP_MINIBUS: { file: 'tank-tank-300', name: 'Tank 300' }
+    };
     MAIN_CLASSES.forEach(function (c) {
+      var photo = classPhotos[c.code];
       var inp = h('input', { type: 'radio', name: 'sil', value: c.code });
       inp.addEventListener('change', function () { S.customCls = c.code; goal('calc_custom_class'); render(); });
       el.silGrid.appendChild(h('label', { class: 'sil' }, inp,
-        h('span', {}, h('img', { src: 'img/' + c.sil + '.svg', width: '800', height: '450', alt: 'Силуэт автомобиля: ' + c.name, loading: 'lazy', decoding: 'async' }), c.name)));
+        h('span', {}, h('img', { src: 'img/cars/' + photo.file + '.webp', width: '800', height: '450', alt: photo.name, loading: 'lazy', decoding: 'async' }), h('strong', { text: c.name }), h('small', { class: 'sil-example', text: 'Например: ' + photo.name }))));
     });
 
     $('#hero-form').addEventListener('submit', function (e) {
@@ -495,7 +503,15 @@
     pk.forEach(function (id) { thead.appendChild(h('th', { scope: 'col', text: PK[id].name }, PK[id].note ? h('small', { text: PK[id].note }) : null)); });
     thead.appendChild(h('th', { scope: 'col', text: '+ шумоизоляция арок' }));
     var tb = h('tbody');
+    var classPhotos = {
+      AB: { file: 'hyundai-solaris', name: 'Hyundai Solaris' },
+      C: { file: 'geely-coolray', name: 'Geely Coolray' },
+      DE: { file: 'geely-atlas-pro', name: 'Geely Atlas Pro' },
+      SUV: { file: 'geely-monjaro', name: 'Geely Monjaro' },
+      PICKUP_MINIBUS: { file: 'tank-tank-300', name: 'Tank 300' }
+    };
     MAIN_CLASSES.forEach(function (c) {
+      var photo = classPhotos[c.code];
       var tr = h('tr', {}, h('th', { scope: 'row' }, c.name, h('small', { text: c.examples.join(', ') })));
       pk.forEach(function (id) { tr.appendChild(h('td', { text: fmt(priceOf(id, c.code)) })); });
       tr.appendChild(h('td', { text: fmt(archesOf(c.code)) }));
@@ -509,7 +525,15 @@
       btns.forEach(function (b) { var on = b.getAttribute('data-id') === id; b.setAttribute('aria-selected', on ? 'true' : 'false'); b.tabIndex = on ? 0 : -1; if (on && focus) b.focus(); });
       clear(panel); panel.setAttribute('aria-labelledby', 'tab-' + id);
       var ul = h('ul', { class: 'tab-list' });
-      MAIN_CLASSES.forEach(function (c) {
+      var classPhotos = {
+      AB: { file: 'hyundai-solaris', name: 'Hyundai Solaris' },
+      C: { file: 'geely-coolray', name: 'Geely Coolray' },
+      DE: { file: 'geely-atlas-pro', name: 'Geely Atlas Pro' },
+      SUV: { file: 'geely-monjaro', name: 'Geely Monjaro' },
+      PICKUP_MINIBUS: { file: 'tank-tank-300', name: 'Tank 300' }
+    };
+    MAIN_CLASSES.forEach(function (c) {
+      var photo = classPhotos[c.code];
         ul.appendChild(h('li', {}, h('span', {}, c.name, h('small', { text: c.examples.join(', ') }),
           id !== 'bottom' ? h('small', { text: '+ шумоизоляция арок ' + rub(archesOf(c.code)) }) : null), h('b', { text: rub(priceOf(id, c.code)) })));
       });
