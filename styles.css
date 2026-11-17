@@ -739,7 +739,7 @@ h3,.why-card h3{font-size:clamp(18px,4.8vw,22px);line-height:1.35}
   .facts{grid-template-columns:repeat(3,minmax(0,1fr));gap:0}
   .facts li{padding:var(--s6) var(--s5);border-top:0;border-left:var(--bw) solid var(--rule)}
   .facts li:first-child{border-left:0;padding-left:0}
-  .facts strong{min-height:2.8em}
+  .facts strong{min-height:0}
   .process .scg__title{font-size:28px}
   .process .scg__text{font-size:18px}
 }
@@ -756,4 +756,12 @@ h3,.why-card h3{font-size:clamp(18px,4.8vw,22px);line-height:1.35}
   .process .scg:not(.scg--static) .scg__nav{margin:0}
   .process .scg:not(.scg--static) .scg__cap{min-height:var(--scg-caption-h,0px)}
   .process .scg:not(.scg--static) .scg__title{font-size:clamp(16px,4.3vw,18px);line-height:1.3;font-weight:600}
+}
+
+/* Коррекция по просмотру на реальном телефоне и компьютере. */
+.facts p{gap:var(--s1)}
+#faq{padding-bottom:var(--s6)}
+#contacts{padding-top:var(--s7)}
+@media (min-width:900px){
+  #warranty .head-split{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:var(--s8)}
 }

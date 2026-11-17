@@ -266,9 +266,10 @@
       if (window.matchMedia('(max-width: 599px)').matches && !isStatic) {
         var width = cap.getBoundingClientRect().width;
         if (width > 0) {
+          // Reset bottom: inherited absolute offsets would stretch this probe to the full scroll track.
           var sample = make('div', 'scg__cap');
           sample.setAttribute('aria-hidden', 'true');
-          sample.style.cssText = 'position:absolute;left:0;top:0;visibility:hidden;pointer-events:none;transform:none;min-height:0;height:auto;width:' + width + 'px';
+          sample.style.cssText = 'position:absolute;left:0;top:0;right:auto;bottom:auto;visibility:hidden;pointer-events:none;transform:none;min-height:0;height:auto;width:' + width + 'px';
           var sampleTitle = make('span', 'scg__title');
           var sampleText = make('span', 'scg__text');
           sample.appendChild(sampleTitle);
