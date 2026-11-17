@@ -765,3 +765,16 @@ h3,.why-card h3{font-size:clamp(18px,4.8vw,22px);line-height:1.35}
 @media (min-width:900px){
   #warranty .head-split{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:var(--s8)}
 }
+
+/* Подсказка под основным CTA и компактная гарантия на телефоне. */
+.hero-action-note{display:none}
+@media (min-width:900px){
+  .hero-actions{column-gap:var(--s6);row-gap:var(--s2)}
+  .hero-actions>.btn{grid-column:1;grid-row:1}
+  .hero-actions>.text-link{grid-column:2;grid-row:1}
+  .hero-action-note{display:block;grid-column:1;grid-row:2;width:0;min-width:100%;max-width:none;font-size:14px;font-weight:600;line-height:1.6;color:var(--ink-soft);text-shadow:0 1px 5px rgba(0,0,0,.7)}
+}
+@media (max-width:599px){.passport-details{display:none}}
+@media (max-width:899px){
+  .cmp th[scope=row]::before{font-family:var(--font-h);font-size:24px;font-weight:600;line-height:1.2}
+}
