@@ -1,0 +1,27 @@
+/* Плашка согласия на cookie («как в Тильде», решение владельца 16.11.2026).
+   Шрифт, цвета и скругления — из styles.css (--ink, --orange, --line, Manrope). Файл подключается отдельно от стилей сайта. */
+.ck{position:fixed;z-index:40;left:20px;right:20px;bottom:20px;max-width:760px;display:flex;align-items:center;gap:20px;
+  padding:16px 20px;background:#fff;color:var(--ink,#14110F);border:1px solid var(--line,#d9dadd);border-radius:12px;
+  box-shadow:0 8px 32px #14110f2e;font:400 14px/1.5 Manrope,Arial,sans-serif}
+.ck[hidden]{display:none}
+.ck-text{margin:0;flex:1;min-width:0}
+.ck-text a{color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.ck-actions{display:flex;gap:10px;flex-shrink:0}
+.ck-btn{box-sizing:border-box;min-width:112px;min-height:44px;padding:10px 20px;border:1px solid transparent;border-radius:12px;
+  font:800 14px/1.25 Manrope,Arial,sans-serif;color:var(--ink,#14110F);cursor:pointer;text-align:center;transition:background .18s}
+.ck-yes{background:var(--orange,#F57135)}
+.ck-yes:hover{background:#ff8450}
+.ck-no{background:#fff;border-color:#c5c7c9}
+.ck-no:hover{background:#f3f4f5}
+.ck-btn:focus-visible,.ck-text a:focus-visible{outline:3px solid var(--ink,#14110F);outline-offset:2px}
+/* ссылка «Настройки cookie» на страницах без подвала */
+.ck-foot{padding:18px 0 28px;font-size:14px}
+.ck-foot a{color:inherit;text-underline-offset:4px}
+@media(max-width:820px){
+  /* ниже плашки — нижняя панель сайта с кнопкой расчёта: cookie.js ставит --ck-bottom по её высоте */
+  .ck{left:8px;right:8px;bottom:var(--ck-bottom,8px);flex-direction:column;align-items:stretch;gap:10px;padding:12px 14px;font-size:13px;line-height:1.4}
+  .ck-actions{gap:8px}
+  .ck-btn{flex:1;min-width:0;padding:8px 12px;font-size:14px}
+  /* чтобы низ страницы (подвал) не оставался под плашкой */
+  body.ck-open{padding-bottom:var(--ck-h,0)}
+}

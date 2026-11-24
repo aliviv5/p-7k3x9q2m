@@ -1,0 +1,601 @@
+/* АНТИКОРИКА v8 — слой по замечаниям владельца Р-1…Р-29 (24.11.2026).
+   Подключается последним, после v7.css. Спецификация: site/design-spec-v8-2026-11-24.md.
+   Где селектор v7 такой же силы — побеждает этот файл (он идёт позже); двойной класс (.a.a) — чтобы перебить правила v7 и revision-v4.
+   Порядок: 1 токены · 2 типографика · 3 кнопки · 4 шапка · 5 первый экран · 6 блоки, надзаголовок, заголовок · 7 карточки и гармошка
+   8 калькулятор · 9 цены и доп. услуги · 10 процесс · 11 до/после · 12 почему · 13 паспорт · 14 отзывы · 15 команда
+   16 вопросы, заявка, контакты · 17 подвал · 18 виджет · 19 вкладыши · 20 без анимации */
+
+/* ---------- 1. Токены ---------- */
+@font-face{font-family:Unbounded;src:url('fonts/Unbounded-Variable.ttf') format('truetype');font-weight:200 900;font-display:swap}
+:root{
+ --orange:#FC6111;--orange-hi:#FF7C2B;--orange-lo:#E2570D;--orange-text:#C14A0D;--orange-on-dark:#FF6A1A;
+ --light:#F9F4F1;--card-line:#EADFD8;
+ --field:12px;--section-y:16px;--section-y-c:16px;--head-gap:16px;--head-gap-c:16px;--gap:12px;--card-pad:16px;
+ --dock-h:0px;--f-head:Unbounded,Manrope,Arial,sans-serif;
+}
+@media(min-width:1024px){:root{--field:40px;--section-y:48px;--section-y-c:48px;--head-gap:32px;--head-gap-c:32px;--gap:20px;--card-pad:24px}}
+.wrap{width:min(1180px,calc(100% - 2 * var(--field)))}
+.white{background:var(--light)}
+
+/* ---------- 2. Типографика ---------- */
+body{font:400 14px/1.4 Manrope,Arial,sans-serif}
+h1,h2{font-family:var(--f-head);font-weight:600;overflow-wrap:break-word;hyphens:manual;letter-spacing:0}
+h1{font-size:clamp(26px,7.4vw,30px);line-height:1.1}
+h2{font-size:22px;line-height:1.1}
+h3{font-size:18px;line-height:1.2}
+.small{font-size:13px;line-height:1.4}
+.hl{color:var(--orange);font-style:normal}
+@media(min-width:821px){h1{font-size:clamp(34px,3.9vw,60px)}}
+@media(min-width:1024px){body{font-size:16px;line-height:1.5}h1{font-size:clamp(40px,3.9vw,60px);line-height:1.1}h2{font-size:clamp(26px,2.6vw,38px);line-height:1.1}h3{font-size:22px}.small{font-size:14px}}
+
+/* ---------- 3. Кнопки (Р-7): один размер, по центру ---------- */
+.btn{width:100%;max-width:320px;min-width:0;margin-inline:auto;min-height:56px;font-size:17px}
+.section-action .btn,.package-body .btn,.lead-form>.btn,.result-options>.btn,.passport-layout .btn,.hero .btn{width:100%;max-width:320px;min-width:0;margin-inline:auto}
+.section-action{display:flex;justify-content:center;margin-top:20px}
+.package-body .btn{align-self:center}
+@media(min-width:1024px){.section-action{margin-top:32px}.btn{font-size:18px}}
+.btn.btn-max,.btn.btn-tg{box-sizing:border-box;width:min(100%,264px);max-width:264px;height:48px;min-height:48px;padding-block:0;justify-content:center;margin-inline:auto;font-size:15px;gap:10px;text-align:center}
+.btn.btn-max .msg-ic,.btn.btn-tg .msg-ic{width:24px;height:24px;flex:none}
+.btn.header-calc{width:220px;max-width:none;margin:0}
+.result-options>.btn,.lead-form>.btn{font-size:16px;line-height:1.25}
+.lead-form>.btn.btn{box-sizing:border-box;height:auto;min-height:56px;padding-block:8px;font-size:16px;line-height:1.15}
+
+/* ---------- 4. Шапка (Р-8): фон — векторные полосы без «лесенки» ---------- */
+@media(max-width:820px){
+ .site-header{background:#0B0A08 url(img/header-bg.svg) left center/cover no-repeat}
+ .site-header:before{content:none;background:none;filter:none}
+ .site-header .header-inner{width:calc(100% - 2 * var(--field))}
+}
+
+/* ---------- 5. Первый экран (Р-9…Р-13) ---------- */
+.hero{min-height:calc(100svh - var(--header-h));padding:16px 0;align-items:stretch}
+.hero-picture img{object-position:30% 0}
+.hero .hero-inner{display:flex;flex-direction:column;align-items:flex-start;min-height:calc(100svh - var(--header-h) - 32px)}
+.hero h1{margin-top:8px}
+.hero .eyebrow{font-size:13px;line-height:1.35}
+.hero-offers{margin-top:12px;gap:6px;padding-left:16px}
+.hero-offers:before{background:linear-gradient(180deg,rgba(252,97,17,0) 0%,rgba(252,97,17,.6) 22%,#FC6111 40%,#FC6111 60%,rgba(252,97,17,.6) 78%,rgba(252,97,17,0) 100%)}
+.hero-offers p{padding:5px 12px;font-size:14px;border-color:var(--orange)}
+.hero-offers strong{font-size:1.12em;font-weight:800;color:var(--orange-on-dark)}
+.hero-terms{margin-top:8px;font-size:12px;line-height:1.35}
+.hero .btn{display:inline-flex;margin-top:auto;align-self:center}
+.hero-terms+.btn{margin-top:auto}
+.hero .hero-inner>.hero-terms{margin-bottom:16px}
+@media(max-width:820px){.hero{padding-top:16px}.hero-shade{background:linear-gradient(180deg,rgba(0,0,0,.66) 0%,rgba(0,0,0,.5) 42%,rgba(0,0,0,.1) 80%)}}
+@media(min-width:821px){
+ .hero{padding:48px 0 0}
+ .hero .hero-inner{min-height:calc(100svh - var(--header-h) - 48px);padding-bottom:clamp(48px,18svh,160px)}
+ .hero-picture img{object-position:center}
+ .hero .btn{align-self:flex-start;margin-inline:0;margin-top:var(--s6,32px);width:auto;min-width:320px;max-width:none}
+ .hero-offers{margin-top:auto}
+ .hero-terms{margin-top:12px;font-size:13px}
+ .hero .hero-inner>.hero-terms{margin-bottom:0}
+ .hero .eyebrow{font-size:16px}
+ .hero-offers p{font-size:16px}
+}
+@media(min-width:1100px){.hero-offers p{font-size:17px}.hero-terms{font-size:14px}}
+
+/* ---------- 6. Блоки, надзаголовок, заголовок (Р-2…Р-5) ---------- */
+section.section{padding-block:var(--section-y)}
+#works,#faq,#request,#contacts,.calculator{padding-block:var(--section-y-c)}
+.section-head{max-width:none;margin:0 0 var(--head-gap);text-align:left}
+.section-head.section-head h2,.passport-layout h2,.faq-layout h2,.request-layout h2{margin-top:0;padding-inline:0;text-align:left}
+.section-head>p{margin:8px 0 0;font-size:14px;line-height:1.4;max-width:65ch}
+@media(min-width:1024px){.section-head>p{margin-top:12px;font-size:16px;line-height:1.5}}
+/* надзаголовок: по центру, линия слева и справа, у всех одинаково */
+.section-kicker.section-kicker{display:flex;align-items:center;justify-content:center;gap:10px;width:auto;margin:0 0 10px;padding:0;text-align:center;font:800 12px/1.2 Manrope,Arial,sans-serif;letter-spacing:.05em;text-transform:uppercase}
+.section-kicker.section-kicker:before,.section-kicker.section-kicker:after{content:"";display:block;flex:0 1 32px;height:2px;border-radius:1px;background:#FC6111}
+@media(min-width:1024px){.section-kicker.section-kicker{font-size:13px;gap:14px;margin-bottom:12px}.section-kicker.section-kicker:before,.section-kicker.section-kicker:after{flex-basis:56px}}
+/* черта у H2 — на всю высоту заголовка, 14 px до текста */
+main h2:before{content:none!important}
+.heading-label.heading-label{display:block;position:relative;width:auto;max-width:100%;padding-left:18px;vertical-align:baseline}
+.heading-label.heading-label:before{content:"";position:absolute;display:block;left:0;top:.04em;bottom:.04em;width:4px;height:auto;margin:0;border-radius:4px;vertical-align:baseline;
+ background:linear-gradient(180deg,rgba(252,97,17,0) 0%,rgba(252,97,17,.6) 22%,#FC6111 40%,#FC6111 60%,rgba(252,97,17,.6) 78%,rgba(252,97,17,0) 100%);box-shadow:0 0 12px rgba(252,97,17,.35)}
+.card-number{font-size:18px}
+.steps .card-number{font-size:18px}
+@media(min-width:1024px){.card-number,.steps .card-number{font-size:22px}}
+.card-number:after{background:linear-gradient(90deg,#FC6111,rgba(252,97,17,0))}
+.gray .card-number,.dark-card .card-number{color:var(--orange-on-dark)}
+
+/* ---------- 7. Карточки и гармошка «Коррозия…» (Р-5, Р-14, Р-15) ---------- */
+.info-card{background:#fff;border:1px solid var(--card-line);border-radius:var(--r-card);padding:var(--card-pad);box-shadow:0 1px 2px rgba(80,50,30,.06)}
+.info-card h3{margin-top:10px;font-size:18px;line-height:1.2}
+.info-card p{margin-top:8px;font-size:14px;line-height:1.4;color:#4A4D50}
+@media(min-width:1024px){.info-card h3{margin-top:12px;font-size:22px}.info-card p{margin-top:12px;font-size:16px;line-height:1.5}}
+.notice{background:#fff;border:1px solid var(--card-line);padding:12px 14px;gap:12px;margin-top:var(--gap)}
+.notice p{font-size:14px;line-height:1.4}
+.notice>span{background:var(--orange)}
+.stack-card.stack-card{background:#fff;box-shadow:none}
+@media(max-width:1099px){
+ /* гармошка: карточки от края до края, одинаковой высоты (высоту выставляет app.js) */
+ .stack-cards.stack-cards{width:100%;max-width:none;margin-inline:0;margin-top:-32px}
+ .stack-card.stack-card{border-radius:20px 20px 0 0;border-width:1px 0 0;min-height:var(--stack-h,184px);padding:16px var(--card-pad) 24px;box-shadow:0 -6px 16px -8px rgba(20,17,15,.22)}
+ .stack-card.stack-card+.stack-card{margin-top:0}
+ .stack-card.stack-card:last-child{padding-bottom:24px}
+ .stack-card .stack-text{padding-right:38%}
+ .stack-cards.stack-cards:after{height:56px}
+ .stack-banner{--banner-h:clamp(200px,56vw,300px)}
+ .stack{--banner-h:clamp(200px,56vw,300px)}
+}
+@media(min-width:1100px){
+ .stack-cards{gap:var(--gap)}
+ .stack-card.stack-card{padding:var(--card-pad);min-height:0;border-width:1px;border-radius:var(--r-card)}
+ .stack-cards:after{display:none}
+}
+
+/* ---------- 8. Калькулятор ---------- */
+.car-fields label{font-size:13px;line-height:1.3;gap:6px}
+.car-fields select{height:40px;border-radius:10px;font-size:14px}
+.calc-panel .car-fields{gap:var(--card-pad)}
+.calc-panel,.class-picker,.calc-result{padding:var(--card-pad)}
+.calc-panel h3{font-size:18px}
+.calc-heading{margin-bottom:var(--head-gap)}
+.class-picker,.calc-result{margin-top:var(--gap)}
+@media(min-width:1024px){.calc-panel{padding:var(--s7,48px) var(--s6,32px)}.calc-panel h3{font-size:22px}.car-fields select{height:44px;font-size:15px}}
+.text-button{font-size:14px}
+
+/* ---------- 9. Цены, плашка «Все цены…», доп. услуги (Р-17…Р-20) ---------- */
+.package-grid{gap:var(--gap)}
+.package-card{background:#fff;border:1px solid var(--card-line);box-shadow:0 1px 2px rgba(80,50,30,.06)}
+.package-body{padding:var(--card-pad);gap:10px}
+.package-label{font-size:12px}
+.package-body h3{font-size:18px}
+.package-body>p:not(.package-price){font-size:14px;line-height:1.4}
+.package-body ul{font-size:14px;line-height:1.4;gap:6px}
+.package-price{font-size:26px;padding-top:8px}
+@media(min-width:1024px){.package-body h3{font-size:20px}.package-body>p:not(.package-price){font-size:15px}.package-body ul{font-size:15px}.package-price{font-size:30px}}
+.price-caption{margin:8px 0 var(--gap);font-size:13px}
+.class-tabs--card button,.class-tabs button{font-size:14px}
+.price-table{margin-top:var(--gap);padding:0;border:1px solid var(--card-line);border-radius:12px;background:#fff}
+.price-table summary{display:flex;align-items:center;gap:10px;min-height:40px;padding:0 12px;font-size:14px;font-weight:800;list-style:none;cursor:pointer}
+.price-table summary::-webkit-details-marker{display:none}
+.price-table summary:before{content:"";flex:none;width:0;height:0;border-style:solid;border-width:5px 0 5px 8px;border-color:transparent transparent transparent var(--orange);transition:transform .18s}
+.price-table[open] summary:before{transform:rotate(90deg)}
+.price-table .table-scroll{margin:0;padding:0 12px 12px}
+.price-table summary:focus-visible{outline:3px solid #000;outline-offset:2px;border-radius:12px}
+/* доп. услуги: на телефоне фото от края до края, на настольной — сверху над списком */
+.extras{margin-top:var(--gap);border-radius:0;border-left:0;border-right:0;margin-inline:calc(var(--field) * -1)}
+.extras-photo{height:clamp(140px,38vw,200px)}
+.extras-body{padding:var(--card-pad) var(--field)}
+.extras h3{font-size:22px;margin:0 0 12px}
+.extras dl{padding:0 12px;border-radius:12px}
+.extras dl>div{min-height:44px;padding:10px 0;gap:12px}
+.extras dt,.extras dd{font-size:14px;line-height:1.35}
+@media(min-width:1024px){
+ .extras{margin-inline:0;margin-top:var(--s7,48px);border-radius:var(--r-card);border:1px solid var(--line-d);display:block}
+ .extras-photo{width:100%;height:clamp(240px,22vw,320px);min-height:0}
+ .extras-body{padding:var(--card-pad)}
+ .extras h3{font-size:26px;margin-bottom:16px}
+ .extras dl{padding:0 20px}
+ .extras dt,.extras dd{font-size:16px}
+}
+
+/* ---------- 10. Процесс: гармошка (Р-16) ---------- */
+.process-video{margin-bottom:var(--gap)}
+.steps{gap:var(--gap)}
+.step-body{padding:var(--card-pad)}
+.steps h3{margin-top:10px}
+.steps p{margin-top:8px;font-size:14px;line-height:1.4}
+@media(min-width:1024px){.steps p{font-size:16px;line-height:1.5}.steps h3{margin-top:12px}}
+@media(max-width:1099px){
+ .steps.steps{display:block;margin-inline:calc(var(--field) * -1);margin-top:0;padding:0}
+ .steps.steps:after{content:"";display:block;height:40px}
+ .steps.steps li{position:sticky;top:calc(var(--header-h) + 12px + var(--i,0) * 10px);z-index:calc(2 + var(--i,0));min-height:var(--stack-h,0);border-radius:20px 20px 0 0;border-width:1px 0 0;box-shadow:0 -6px 16px -8px rgba(0,0,0,.6)}
+ .steps li:nth-child(1){--i:0}.steps li:nth-child(2){--i:1}.steps li:nth-child(3){--i:2}.steps li:nth-child(4){--i:3}
+ .steps li+li{margin-top:0}
+}
+@media(min-width:1100px){.steps:after{display:none}}
+
+/* ---------- 11. До/после: подпись — отдельный мини-блок (Р-21) ---------- */
+.ba__view{border-radius:var(--r-card)}
+.ba__cap{margin-top:10px;padding:12px 16px;border:1px solid var(--line-d);border-radius:16px;gap:2px}
+.ba__cap strong{font-size:18px;margin-bottom:4px}
+.ba__cap span{font-size:13px;line-height:1.35}
+.ba-grid{gap:var(--gap)}
+@media(min-width:1024px){.ba__cap{padding:16px 20px}.ba__cap span{font-size:15px;line-height:1.45}.ba-grid{gap:var(--gap)}}
+
+/* ---------- 12. Почему Антикорика: текст слева, картинка справа (Р-22) ---------- */
+.advantages-grid{grid-template-columns:1fr;gap:var(--gap)}
+.advantages-grid .info-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,46%);gap:12px;align-items:center;padding:8px 8px 8px var(--card-pad);overflow:hidden}
+.advantages-grid .card-img{order:2;margin:0;width:100%;height:auto;min-height:140px;aspect-ratio:auto;align-self:stretch;border-radius:14px;object-fit:cover}
+.advantages-grid .card-text{order:1;padding:8px 0}
+@media(min-width:600px) and (max-width:1099px){.advantages-grid{grid-template-columns:1fr;gap:var(--gap)}}
+@media(min-width:1100px){.advantages-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--gap)}.advantages-grid .info-card{padding:12px 12px 12px var(--card-pad)}.advantages-grid .card-img{aspect-ratio:auto;height:auto;min-height:200px;align-self:stretch}}
+
+/* ---------- 13. Паспорт (Р-23, Р-24) ---------- */
+.passport-layout.passport-layout{display:grid;grid-template-columns:minmax(0,1.17fr) minmax(0,1fr);gap:12px 16px;align-items:start}
+.passport-layout>.section-head{grid-column:1/-1;margin-bottom:4px}
+.passport-text{grid-column:1;text-align:left}
+.passport-layout figure{grid-column:2;margin:0}
+.passport-layout .tagline,.passport-layout>.section-action{grid-column:1/-1}
+.passport-layout .passport-text p{margin:0;font-size:13.5px;line-height:1.4;color:rgba(255,255,255,.92);max-width:none}
+.passport-layout .passport-text p+p{margin-top:10px;color:var(--muted-d)}
+.passport-layout .tagline{margin:4px 0 0;font:800 16px/1.3 Manrope,Arial,sans-serif;color:var(--orange-on-dark);text-align:left}
+.passport-layout>.section-action{margin-top:8px}
+.passport-layout picture,.map-image-link picture{display:contents}
+.passport-image{width:100%;height:auto;aspect-ratio:3/4;object-fit:cover;object-position:center;border-radius:16px}
+@media(max-width:339px){.passport-layout.passport-layout{grid-template-columns:1fr}.passport-layout figure{grid-column:1}}
+@media(min-width:900px){
+ .passport-layout.passport-layout{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto auto auto 1fr;gap:20px 40px}
+ .passport-layout figure{grid-column:2;grid-row:2/5}
+ .passport-layout .tagline{grid-column:1;grid-row:3;align-self:start;margin-top:4px}
+ .passport-layout>.section-action{grid-column:1;grid-row:4;justify-content:flex-start;align-self:start;margin-top:4px}
+ .passport-layout>.section-action .btn{margin-inline:0}
+ .passport-image{aspect-ratio:3/2;object-position:center}
+ .passport-layout .passport-text p{font-size:16px;line-height:1.5}
+ .passport-layout .tagline{font-size:20px}
+}
+
+/* ---------- 14. Отзывы: те же поля, без плашки «демо» (Р-25) ---------- */
+#rvw-widget.rvw{max-width:none;width:100%;margin:0;padding:0 0 4px}
+#rvw-widget.rvw :where(.rvw-head,.rvw-top,.rvw-tabs,.rvw-grid,.rvw-viewport,.rvw-track,.rvw-summary,.rvw-controls){max-width:100%;box-sizing:border-box}
+#rvw-widget{--rvw-accent:var(--orange-on-dark)}
+
+/* ---------- 15. Команда (Р-26): должность в две строки ---------- */
+.team-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media(min-width:900px){.team-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gap)}}
+.team-card{background:#fff;border-color:var(--card-line)}
+.team-photo{aspect-ratio:5/4;gap:8px}
+.team-photo svg{width:56px;height:56px}
+.team-photo{font-size:12px}
+.team-info{padding:10px 8px 12px}
+.team-info h3{font-size:clamp(13px,3.5vw,16px);line-height:1.25}
+.team-info p{font-size:clamp(11.5px,3.15vw,14px);line-height:1.3;margin-top:6px;text-wrap:balance}
+.team-experience{font-size:clamp(10.5px,2.9vw,13px);line-height:1.3;margin-top:6px}
+@media(min-width:900px){.team-photo{aspect-ratio:4/5}.team-info{padding:16px}.team-info h3{font-size:18px}.team-info p{font-size:15px;margin-top:8px}.team-experience{font-size:13px;margin-top:8px}}
+@media(min-width:1100px){.team-info{padding:20px}.team-info h3{font-size:20px}.team-info p{font-size:16px}}
+
+/* ---------- 16. Вопросы, заявка, контакты (Р-27…Р-29) ---------- */
+.faq-layout,.request-layout{gap:var(--gap)}
+@media(min-width:900px){.faq-layout,.request-layout{gap:var(--s7,48px)}}
+.faq-layout>div:first-child,.request-layout>div:first-child{text-align:left}
+.faq-list{gap:8px}
+.faq-list details{border-radius:12px;padding:0 14px}
+.faq-list summary{min-height:44px;padding:10px 28px 10px 0;font-size:14px;line-height:1.35}
+.faq-list details p{padding-bottom:12px;font-size:14px;line-height:1.4}
+@media(min-width:1100px){.faq-list summary{font-size:16px}.faq-list details p{font-size:15px}}
+.request-layout p{margin-top:8px}
+.request-layout p.response-note{font-weight:800}
+.lead-form{background:#fff;border:1px solid var(--card-line);border-radius:20px;padding:var(--card-pad);gap:12px}
+.lead-form>label:not(.consent-check){font-size:13px;line-height:1.3;gap:6px}
+.optional{font-size:12px}
+.lead-form input:not([type=checkbox]){height:40px;border-radius:10px;padding:0 12px;font-size:14px;font-weight:400}
+@supports (-webkit-touch-callout:none){.lead-form input:not([type=checkbox]),.car-fields select{font-size:16px}}
+.lead-form .consent-check{font-size:12.5px;line-height:1.4}
+.consent-check input{width:20px;height:20px}
+.selection-summary{font-size:13px;padding:10px 12px;background:var(--light)}
+.contact-card{background:#fff;padding:var(--card-pad)}
+.contact-card h3{font-size:20px;line-height:1.25}
+.contact-card>p{margin-top:8px;font-size:14px}
+.contact-actions{gap:8px;margin-top:12px;justify-items:center}
+.business-details{font-size:13px;margin-top:16px;padding-top:12px}
+.map-image-link img{min-height:0;height:auto;aspect-ratio:2.19/1;object-position:44% 50%}
+@media(max-width:899px){.map-image-link img{aspect-ratio:auto;min-height:220px;height:100%}}
+@media(max-width:600px){.map-image-link img{aspect-ratio:600/430;min-height:0;height:auto;object-position:50% 50%}}
+@media(min-width:900px){.map-image-link img{height:100%;min-height:300px}}
+.map-panel{border-radius:var(--r-card)}
+
+/* ---------- 17. Подвал (Р-13): расстояния как на образце 14-13-09 ---------- */
+.site-footer{padding:32px 0}
+.footer-inner{display:grid;gap:0}
+.footer-inner .logo{margin-bottom:16px}
+.footer-inner p{margin:0 0 20px;font-size:14px}
+.footer-inner>div{display:grid;gap:10px;margin-bottom:28px;font-size:14px}
+.footer-inner small{font-size:13px}
+.site-footer.site-footer{padding-bottom:32px}
+
+/* ---------- 18. Виджет: нет нижней планки ---------- */
+@media(max-width:820px){.msg-fab{left:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px)}body.ck-open .msg-fab{bottom:calc(env(safe-area-inset-bottom,0px) + var(--ck-h,0px) + 20px)}.msg-list{max-height:calc(100svh - var(--ck-h,0px) - 120px)}}
+@media(max-width:1099px){body.fab-hide .msg-fab:not(.is-open):not(:focus-within){opacity:0;visibility:hidden;pointer-events:none}}
+
+/* ---------- 19. Страницы-вкладыши ---------- */
+.legal h1{font-size:22px;line-height:1.15}
+.legal h2{font-size:16px}
+.legal p,.legal li{font-size:14px;line-height:1.45}
+@media(min-width:1024px){.legal h1{font-size:34px}.legal h2{font-size:22px}.legal p,.legal li{font-size:16px;line-height:1.5}}
+
+/* ---------- 20. Без анимации и низкие экраны ---------- */
+@media(prefers-reduced-motion:reduce) and (max-width:1099px){
+ .steps li,.steps.steps li{position:relative!important;top:auto!important}
+ .steps.steps:after{display:none}
+ .steps li+li{margin-top:var(--gap)}
+ .stack-card.stack-card+.stack-card{margin-top:var(--gap)!important}
+}
+@media(max-width:1099px) and (max-height:620px){
+ .steps.steps li{position:relative!important;top:auto!important}
+ .steps.steps:after{display:none}
+ .steps li+li{margin-top:var(--gap)}
+}
+
+/* ---------- поправки после первых снимков ---------- */
+.hero h1{max-width:1000px}
+@media(min-width:1100px){.stack-card.stack-card{top:auto!important}}
+/* Codex r1: карточки «Процесса» помещаются в экран на 600–1099; черта у H2 с достаточной силой селектора */
+@media(max-width:1099px){.steps .step-img{aspect-ratio:2.4/1;max-height:clamp(120px,22svh,190px)}}
+main .heading-label.heading-label:before{position:absolute;display:block;top:.04em;bottom:.04em;height:auto;margin:0;vertical-align:baseline}
+@media(min-width:600px) and (max-width:899px){.passport-layout figure{max-width:340px;justify-self:end}}
+
+/* =====================================================================
+   v8.1 — правки владельца С-1…С-17 (24.11.2026). Спецификация: design-spec-v8, раздел «v8.1».
+   ===================================================================== */
+:root{--orange-kicker:#FB6512}   /* С-1: цвет надзаголовка на светлом — медиана трёх замеров по образцам Артёма */
+/* С-1: на светлых блоках — яркий оранжевый образцов; на тёмных остаётся --orange-on-dark (владелец: «хорошо») */
+.white .section-kicker.section-kicker{color:var(--orange-kicker)}
+
+/* С-2, С-16: надзаголовки «Коротко о важном» и «Начнём с диагностики» — по центру всего блока, H2 слева */
+.faq-layout.faq-layout,.request-layout.request-layout{row-gap:0}
+.faq-layout>.section-kicker,.request-layout>.section-kicker,.passport-layout>.section-kicker{grid-column:1/-1}
+.faq-layout>div:nth-of-type(1),.request-layout>div:nth-of-type(1){margin-bottom:var(--gap)}
+@media(min-width:900px){.faq-layout.faq-layout,.request-layout.request-layout{column-gap:var(--s7,48px)}.faq-layout>div:nth-of-type(1),.request-layout>div:nth-of-type(1){margin-bottom:0}}
+
+/* С-3: первое фото на телефоне обрезано снизу по поясу мастера (образец 11-03-23): блок ≈156 % ширины, картинка в прежнем масштабе */
+@media(max-width:820px){
+ .hero{--hero-h:min(156vw,calc(100svh - var(--header-h)));min-height:var(--hero-h);overflow:hidden}
+ .hero .hero-inner{min-height:calc(var(--hero-h) - 32px)}
+ .hero-picture img{height:max(100%,201vw)}
+}
+
+/* С-4: после последней карточки гармошки «Коррозия» — короткая пауза, не 56 px */
+@media(max-width:1099px){.stack-cards.stack-cards:after{height:8px}}
+
+/* С-5: «!» по центру оранжевого круга */
+.notice>span{display:flex;align-items:center;justify-content:center;font-size:16px;line-height:1;padding:0;text-align:center}
+
+/* С-6: между «Доп. услугами» и «Как проходит…» нет светлой полосы: фото/тёмный блок телефона доходит до границы секции */
+@media(max-width:1023px){#prices{padding-bottom:0}}
+
+/* С-7: от 4-й карточки этапов до кнопки — короче */
+@media(max-width:1099px){.steps.steps:after{height:4px}#process .section-action{margin-top:12px}}
+
+/* С-9: виджет мессенджеров — в правом нижнем углу */
+@media(max-width:820px){
+ .msg-fab{left:auto;right:12px}
+ .msg-list{left:auto;right:0;justify-items:end}
+}
+
+/* С-10: значки мессенджеров в шапке — того же размера, что оранжевая трубка (44) */
+.header-messengers{gap:12px}
+.header-messengers a{width:44px;height:44px}
+.header-messengers img{width:44px;height:44px}
+@media(max-width:1399px) and (min-width:1100px){.header-messengers{gap:8px}}
+
+/* С-11: «Записаться на бесплатную диагностику» на настольной — в одну строку */
+@media(min-width:1024px){
+ .lead-form>.btn.btn,.result-options>.btn.btn{width:auto;max-width:100%;min-width:320px;padding-inline:28px;white-space:nowrap;align-self:center}
+}
+
+/* С-12: шторка до/после на баннере «Коррозии» (≥1100); на телефоне и планшете — прежний склеенный кадр */
+.stack-banner{isolation:isolate}
+.stack-banner .ba--banner{display:none}
+@media(min-width:1100px){
+ .stack-banner .banner-single{display:none}
+ .stack-banner .ba--banner{display:block;position:absolute;inset:0;margin:0}
+ .ba--banner .ba__view{position:absolute;inset:0;aspect-ratio:auto;height:100%;border-radius:0;box-shadow:none;background:#111}
+ .ba--banner .ba__img{object-position:50% 60%}
+ .ba--banner .ba__tag{top:20px}.ba--banner .ba__tag--before{left:calc(var(--field) + 4px)}.ba--banner .ba__tag--after{right:calc(var(--field) + 4px)}
+}
+
+/* С-14: «Потяните ползунок.» — оранжевая отдельная строка по центру, ниже текста; плавное «дыхание» яркости */
+#beforeafter .section-head>p{max-width:none}
+#beforeafter .ba-lead{display:block;max-width:65ch}
+.ba-hint{display:block;margin-top:16px;text-align:center;font:800 16px/1.3 Manrope,Arial,sans-serif;color:var(--orange-kicker);animation:baBreath 2.6s ease-in-out infinite}
+@keyframes baBreath{0%,100%{opacity:1}50%{opacity:.5}}
+@media(min-width:1024px){.ba-hint{margin-top:20px;font-size:18px}}
+@media(prefers-reduced-motion:reduce){.ba-hint{animation:none}}
+
+/* С-8, С-15: «Паспорт». Телефон: заголовок · текст | книга · лозунг · разворот · кнопка. Настольная: как в v6 — слева заголовок, текст, лозунг, кнопка, справа разворот */
+.passport-layout.passport-layout{grid-template-rows:none;grid-auto-rows:auto;align-items:start}
+.passport-copy{display:contents}
+.passport-layout .passport-copy>h2{grid-column:1/-1;grid-row:2}
+.passport-layout .passport-text{grid-column:1;grid-row:3}
+.passport-layout .passport-book{grid-column:2;grid-row:3;align-self:stretch;margin:0}
+.passport-layout .passport-book .passport-image{height:100%;min-height:0;aspect-ratio:auto;object-fit:cover;object-position:68% 50%}
+.passport-layout .passport-copy>.tagline{grid-column:1/-1;grid-row:4}
+.passport-layout .passport-spread{grid-column:1/-1;grid-row:5;margin:4px auto 0;max-width:560px;width:100%}
+.passport-layout .passport-spread .passport-image{aspect-ratio:3/2;object-fit:cover}
+.passport-layout .passport-copy>.section-action{grid-column:1/-1;grid-row:6;margin-top:8px}
+.passport-layout>.section-kicker{grid-row:1}
+@media(max-width:339px){.passport-layout .passport-text,.passport-layout .passport-book{grid-column:1/-1}.passport-layout .passport-book{grid-row:4}.passport-layout .passport-copy>.tagline{grid-row:5}.passport-layout .passport-spread{grid-row:6}.passport-layout .passport-copy>.section-action{grid-row:7}.passport-layout .passport-book .passport-image{aspect-ratio:3/4;height:auto}}
+@media(min-width:900px){
+ .passport-layout.passport-layout{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 24px;align-items:center}
+ .passport-layout .passport-book{display:none}
+ .passport-copy{display:flex;flex-direction:column;align-items:flex-start;grid-column:1;grid-row:2}
+ .passport-layout .passport-copy>h2{margin:0}
+ .passport-layout .passport-text{margin-top:16px}
+ .passport-layout .passport-text p,.passport-layout .passport-text p+p{margin:0;font-size:16px;line-height:1.5}
+ .passport-layout .passport-text p+p{margin-top:16px}
+ .passport-layout .passport-copy>.tagline{margin:16px 0 0;font-size:18px}
+ .passport-layout .passport-copy>.section-action{margin-top:28px;justify-content:flex-start;width:100%}
+ .passport-layout .passport-copy>.section-action .btn{margin-inline:0}
+ .passport-layout .passport-spread{grid-column:2;grid-row:2;max-width:none;margin:0;align-self:center}
+ .passport-layout .passport-spread .passport-image{border-radius:18px}
+}
+
+/* С-17: подвал на настольной — четыре ссылки в одну строку */
+@media(min-width:900px){.footer-inner>div{display:flex;flex-wrap:wrap;gap:10px 28px}}
+.passport-layout .btn.btn{margin-top:0}
+.notice>span{padding-bottom:1px}
+
+/* =====================================================================
+   v9, шаг 1 — правки владельца Т-1…Т-7, Т-22, Т-25 поверх v8.1 (24.11.2026). Перенесено из v8.2/v8.3 без изменений правил,
+   кроме Т-4; правила первого экрана (.hero min-height) из v8.2 НЕ переносились — они ломали С-3.
+   ===================================================================== */
+/* Т-1: на светлом фоне все оранжевые элементы — яркий #FB6512. Тёмные блоки, первый экран, шапка не менялись */
+.white{--orange:#FB6512;--orange-text:#FB6512}
+.white .section-kicker.section-kicker:before,.white .section-kicker.section-kicker:after{background:#FB6512}
+.white .heading-label.heading-label:before{background:linear-gradient(180deg,rgba(251,101,18,0) 0%,rgba(251,101,18,.6) 22%,#FB6512 40%,#FB6512 60%,rgba(251,101,18,.6) 78%,rgba(251,101,18,0) 100%);box-shadow:0 0 12px rgba(251,101,18,.35)}
+.white .card-number{color:#FB6512}
+.white .card-number:after{background:linear-gradient(90deg,#FB6512,rgba(251,101,18,0))}
+.white .package-label{color:#FB6512}
+/* Т-3: настольная — от надзаголовка до вопросов и до формы такое же расстояние, как до заголовка */
+@media(min-width:900px){.faq-list,.request-layout .lead-form{margin-top:10px}}
+@media(min-width:1024px){.faq-list,.request-layout .lead-form{margin-top:8px}}
+/* Т-4: «Паспорт» на телефоне — без картинки сбоку (книги в разметке нет), текст на всю ширину */
+.passport-layout .passport-text{grid-column:1/-1}
+/* Т-6: стрелка в кружке ползунка — по центру и оранжевая */
+.ba__knob{font-size:0;color:transparent;line-height:0;display:flex;align-items:center;justify-content:center}
+.ba__knob:before{content:"";display:block;width:26px;height:26px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FB6512' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 12h17M8 7.5 3.5 12 8 16.5M16 7.5l4.5 4.5-4.5 4.5'/%3E%3C/svg%3E") center/contain no-repeat}
+/* Т-7: «Потяните ползунок» дышит чаще: период 1,3 с, размах ярче */
+.ba-hint{animation:baBreath 1.3s ease-in-out infinite}
+@keyframes baBreath{0%,100%{opacity:1}50%{opacity:.22}}
+@media(prefers-reduced-motion:reduce){.ba-hint{animation:none}}
+/* Т-25: «Если ржавчина уже появилась» — значок и текст по центру блока. Телефон: значок над текстом; от 600 px — в одну строку */
+.corrosion .notice{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:16px 18px}
+.corrosion .notice>span{align-self:center;margin:0}
+.corrosion .notice p{margin:0;max-width:62ch}
+@media(min-width:600px){.corrosion .notice{flex-direction:row;gap:14px;padding:14px 24px}}
+
+/* =====================================================================
+   v9, шаг 2 — блок «Стоимость обработки по маркам» (Т-12, Т-13, Т-15; перенесён из v8.4), после «Цен».
+   Решения 24.11: на телефоне 10 марок до кнопки «Все марки», на ≥1024 — 16; кнопка «Все марки» — обычная основная кнопка сайта (56 px, по центру).
+   ===================================================================== */
+.brands{border-top:1px solid var(--card-line)}
+.brand-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--gap)}
+@media(min-width:600px){.brand-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(min-width:1200px){.brand-grid{grid-template-columns:repeat(8,minmax(0,1fr))}}
+/* первые 10 плиток на телефоне; 12 на планшете (три полных ряда по 4); все 16 — от 1024 px */
+@media(max-width:599px){.brand-grid:not(.brand-grid--all)>li:nth-child(n+11){display:none}}
+@media(min-width:600px) and (max-width:1023px){.brand-grid:not(.brand-grid--all)>li:nth-child(n+13){display:none}}
+.brand-tile{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:64px;height:100%;padding:12px 10px;box-sizing:border-box;
+ background:#fff;border:1px solid var(--card-line);border-radius:14px;color:#14110F;text-decoration:none;text-align:center;box-shadow:0 1px 2px rgba(80,50,30,.06);
+ transition:border-color .16s,box-shadow .16s,transform .16s,background-color .16s}
+.brand-name{font:600 13px/1.2 var(--f-head);letter-spacing:0;text-wrap:balance;overflow-wrap:anywhere}
+@media(min-width:1024px){.brand-tile{min-height:84px}.brand-name{font-size:14px}}
+@media(hover:hover){.brand-tile:hover{border-color:#FB6512;box-shadow:0 10px 24px -12px rgba(251,101,18,.6),0 0 0 1px #FB6512;transform:translateY(-2px)}}
+.brand-tile:active,.brand-tile:focus-visible{border-color:#FB6512;box-shadow:0 0 0 1px #FB6512;background:#FFF8F3}
+.brand-tile:focus-visible{outline:3px solid #000;outline-offset:2px}
+/* слот под логотип: серая версия по умолчанию, цветная — при наведении и фокусе (файлы img/brands/logo-<имя>-gray.svg / -color.svg) */
+.brand-logo{position:relative;display:block;width:100%;height:36px}
+.brand-logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:opacity .16s}
+.brand-logo-color{opacity:0}
+.brand-tile:hover .brand-logo-color,.brand-tile:focus-visible .brand-logo-color,.brand-tile:active .brand-logo-color{opacity:1}
+.brand-tile:hover .brand-logo-gray,.brand-tile:focus-visible .brand-logo-gray,.brand-tile:active .brand-logo-gray{opacity:0}
+.brand-logo+.brand-name{font-size:12px;font-weight:600}
+.brand-grid--all{margin-top:var(--gap)}
+.brand-grid--all[hidden]{display:none}
+@media(min-width:600px){.brand-grid--all{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(min-width:900px){.brand-grid--all{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media(min-width:1200px){.brand-grid--all{grid-template-columns:repeat(8,minmax(0,1fr))}}
+.brand-tile--sm{min-height:44px;padding:8px 10px;border-radius:10px}
+.brand-tile--sm .brand-name{font-family:Manrope,Arial,sans-serif;font-weight:800;font-size:13px}
+
+/* v9, шаг 3 — Т-10: при выкладке на <html> ставится атрибут data-launch: блок «Команда» и пункт меню «Наши работы» скрываются до реальных фото.
+   Т-9: блок отзывов поднят после «До и после» (как в v8.3); строки рейтинга нет (Т-8 отменён, Т-23). */
+html[data-launch] [data-prelaunch="team"]{display:none}
+
+/* v9, шаг 6 — Т-24: новое фото «Доп. услуг» (Лев, с логотипом на кепке). Телефон — 4:3 на всю ширину, от 600 px — 3,2:1; кадр целиком, мастер в центре */
+.extras-photo{display:block;width:100%;height:auto;min-height:0;aspect-ratio:4/3;object-position:50% 45%}
+@media(min-width:600px){.extras-photo{aspect-ratio:2400/750}}
+@media(min-width:1024px){.extras-photo{height:auto;min-height:0}}
+
+/* =====================================================================
+   v9, шаг 7 — страница марки (/antikor-<марка>/), собирается генератором site/brands/tools/make_brand_page.py.
+   Перенесено из v8.2 без изменений правил; правила для .package-card ограничены классом .brand-page, чтобы главную не задеть.
+   Общих правил первого экрана (.hero{min-height…}) здесь нет — они ломали С-3 на главной.
+   ===================================================================== */
+.brand-page .package-card{--orange:#FB6512;--orange-text:#FB6512}   /* Т-1: белые карточки пакетов — светлый фон, и когда блок тёмный */
+:root{--crumbs-h:44px}
+.crumbs{background:var(--light);border-bottom:1px solid var(--card-line)}
+.crumbs ol{list-style:none;margin:0 auto;padding:0;display:flex;flex-wrap:wrap;align-items:center;gap:0 8px;min-height:var(--crumbs-h);font-size:13px;line-height:1.3;color:#46494C}
+.crumbs li+li:before{content:"/";margin-right:8px;color:#9A9EA2}
+.crumbs a{display:inline-flex;align-items:center;min-height:44px;color:inherit;text-decoration:underline;text-underline-offset:3px}
+.crumbs a:hover{color:#14110F}
+.crumbs [aria-current]{color:#14110F;font-weight:700}
+@media(min-width:1024px){.crumbs ol{font-size:14px}}
+/* первый экран страницы марки: полоски рейтинга нет, вместо неё — крошки */
+.hero--brand{min-height:calc(100svh - var(--header-h) - var(--crumbs-h))}
+.hero--brand .hero-inner{min-height:calc(100svh - var(--header-h) - var(--crumbs-h) - 32px)}
+@media(max-width:820px){.hero--brand{--hero-h:min(156vw,calc(100svh - var(--header-h) - var(--crumbs-h)));min-height:max(var(--hero-h),560px)}.hero--brand .hero-inner{min-height:calc(max(var(--hero-h),560px) - 32px)}}
+@media(min-width:821px){.hero--brand .hero-inner{min-height:calc(100svh - var(--header-h) - var(--crumbs-h) - 48px)}}
+.hero-sub{max-width:36ch;margin:10px 0 0;font:700 16px/1.35 Manrope,Arial,sans-serif;color:#fff;text-shadow:0 1px 10px rgba(0,0,0,.45)}
+@media(min-width:1024px){.hero-sub{max-width:48ch;margin-top:14px;font-size:20px}}
+/* модели и цены */
+.model-group+.model-group{margin-top:32px}
+.model-group h3{margin:0;font-size:20px}
+.model-group-caption{margin:6px 0 0;font-size:14px;line-height:1.4;color:#4A4D50;max-width:75ch}
+@media(min-width:1024px){.model-group+.model-group{margin-top:48px}.model-group h3{font-size:24px}.model-group-caption{font-size:16px}}
+.model-grid{list-style:none;margin:16px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--gap)}
+@media(min-width:700px){.model-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:1024px){.model-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.model-grid>li{display:flex}
+.model-card{flex:1;display:flex;flex-direction:column;background:#fff;border:1px solid var(--card-line);border-radius:16px;overflow:hidden;box-shadow:0 1px 2px rgba(80,50,30,.06)}
+.model-card img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;background:#ECE6E2}
+.model-body{display:grid;gap:8px;padding:10px;align-content:start}
+.model-body h4{margin:2px 0 0;font:600 14px/1.2 var(--f-head);letter-spacing:0}
+.model-packages{display:grid;gap:6px}
+.model-price{display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%;min-height:44px;padding:6px 10px;box-sizing:border-box;border:1px solid var(--card-line);border-radius:10px;background:var(--light);color:#14110F;font:700 12.5px/1.2 Manrope,Arial,sans-serif;text-align:left;cursor:pointer;transition:border-color .16s,background-color .16s}
+.model-price .mp-sum{font-weight:800;font-size:13px;white-space:nowrap}
+.model-price[data-pkg-id=standard]{border-color:#FB6512;background:#FFF4EC}
+@media(hover:hover){.model-price:hover{border-color:#FB6512;background:#FFF1E8}}
+.model-price:focus-visible{outline:3px solid #000;outline-offset:2px}
+.model-price[aria-pressed=true]{border-color:#FB6512;box-shadow:inset 0 0 0 1px #FB6512;background:#FFE7D6}
+@media(min-width:1024px){.model-body{padding:14px;gap:10px}.model-body h4{font-size:16px}.model-price{font-size:14px;padding-inline:12px}.model-price .mp-sum{font-size:15px}}
+.models-note{margin:24px 0 0;max-width:65ch;font-size:14px;line-height:1.45}
+.models-missing{margin:16px 0 0;font-size:14px;text-align:center}
+.models-missing a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+@media(min-width:1024px){.models-note,.models-missing{font-size:16px}}
+.packages .package-body>p:not(.package-price){max-width:none}
+/* поправки после первых снимков страницы марки */
+@media(min-width:700px){.model-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:1024px){.model-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.hero-sub{text-wrap:balance}
+@media(min-width:1024px){.hero-sub{max-width:min(100%,760px)}}
+@media(min-width:600px){.models .section-action .btn{width:auto;max-width:none;padding-inline:32px;white-space:nowrap}}
+/* карточки пакетов — белые, в тёмном блоке текст и галочки тёмные */
+.packages .package-grid{align-items:start}
+.brand-page .package-card,.brand-page .package-card h3,.brand-page .package-card li,.brand-page .package-card strong{color:#14110F}
+.brand-page .package-card p{color:#4A4D50}
+.brand-page .package-card .package-label{color:#FB6512}
+
+/* v9.1, Т-26: плашка «Если ржавчина уже появилась…» на десктопе — в одну строку (≥1280; на 1024–1279 при нехватке места две, текст тот же) */
+@media(min-width:1024px){.corrosion .notice p{max-width:none}}
+@media(min-width:1280px){.corrosion .notice p{white-space:nowrap}}
+
+/* v9.1, паспорт (Лев, README passport): картинка без aspect-ratio/object-fit, рамка тенью (не съедает ширину), на телефоне — целая ширина без дроби */
+.passport-layout .passport-spread .passport-image{aspect-ratio:auto;object-fit:fill;height:auto;border:0;box-shadow:0 0 0 1px var(--line-d),0 20px 40px -16px rgba(0,0,0,.6)}
+@media(max-width:899px){.passport-layout .passport-spread{width:min(560px,calc(100vw - 2 * var(--field)));justify-self:center}}
+
+/* v9.1, картинки каталога (cars-v4, Лев, README cars-normalized-qa): в карточке модели на странице марки — весь кадр на белом.
+   Правило README «.calc-image img → 4:3 на 428–820» НЕ взято: в v9 `.calc-image` — статичная иллюстрация днища (calculator.webp, уже 4:3),
+   а картинка машины в калькуляторе (#result-car-image) стоит с object-fit:contain в рамке 240/190/180 px — срезать её нечем. */
+.model-card img{object-fit:contain;background:#fff}
+
+/* v9.2, Т-14: логотип в плитке марки не шире плитки (размер подбирает app.js по отношению сторон) */
+.brand-logo{max-width:100%}
+
+/* v9.2, Т-30: шторка до/после на баннере «Коррозии» и на телефоне/планшете (раньше только ≥1100).
+   Горизонтальный жест двигает ползунок, вертикальный — прокрутка страницы (touch-action: pan-y на полосе и ручке). */
+.stack-banner .banner-single{display:none}
+.stack-banner .ba--banner{display:block;position:absolute;inset:0;margin:0}
+.ba--banner .ba__view{position:absolute;inset:0;aspect-ratio:auto;height:100%;border-radius:0;box-shadow:none;background:#111;touch-action:pan-y}
+.ba--banner .ba__img{object-position:50% 60%}
+.ba--banner .ba__tag{top:12px}.ba--banner .ba__tag--before{left:calc(var(--field) + 4px)}.ba--banner .ba__tag--after{right:calc(var(--field) + 4px)}
+.ba--banner .ba__handle{touch-action:pan-y}
+@media(min-width:1100px){.ba--banner .ba__tag{top:20px}}
+
+/* v9.2, Т-31: шапка настольной — MAX, Telegram и оранжевая трубка одного размера, 30 px (значки мессенджеров — как в v8 до С-10) */
+@media(min-width:1100px){
+ .header-messengers{gap:10px}
+ .header-messengers a{width:30px;height:44px}
+ .header-messengers img{width:30px;height:30px}
+ .site-header .phone-icon{width:30px;height:30px}
+ .site-header .phone-icon svg{width:16px;height:16px}
+}
+@media(max-width:1399px) and (min-width:1100px){.header-messengers{gap:6px}}
+
+/* v9.3, Т-32: область нажатия значков шапки настольной — не меньше 44×44, сами значки остаются 30×30.
+   Мессенджеры: ссылка 44×44 (значок по центру), промежуток между значками был 10 px — стал 14 (44−30), области встык без наложения.
+   Телефон: ссылка «значок + номер» — высота не меньше 44 px (ширина уже больше 44). */
+@media(min-width:1100px){
+ .header-messengers{gap:0}
+ .header-messengers a{width:44px;height:44px}
+ .header-phone{min-height:44px}
+}
+
+/* v9.4 (24.11.2026): Т-33 — плитки марок только с логотипом, название скрыто визуально (остаётся для чтения с экрана и в aria-label);
+   Т-35 — на устройствах без наведения логотипы сразу цветные, на компьютере серые, цвет при наведении/фокусе. */
+.brand-logo+.brand-name{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+@media(hover:none){
+ .brand-logo-color{opacity:1}
+ .brand-logo-gray{opacity:0}
+}

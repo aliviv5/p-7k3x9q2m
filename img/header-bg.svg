@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 590 83" preserveAspectRatio="xMinYMid slice" width="590" height="83">
+<defs>
+<linearGradient id="a" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3a2a1e" stop-opacity=".75"/><stop offset="1" stop-color="#1c1510" stop-opacity="0"/></linearGradient>
+<linearGradient id="b" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF8A3D"/><stop offset=".5" stop-color="#FC6111"/><stop offset="1" stop-color="#C2490B"/></linearGradient>
+<linearGradient id="c" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff" stop-opacity="0"/><stop offset=".5" stop-color="#ffffff" stop-opacity=".055"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+</defs>
+<rect width="590" height="83" fill="#0B0A08"/>
+<polygon points="0,0 62,0 0,50" fill="url(#a)"/>
+<polygon points="62,0 77,0 0,64 0,50" fill="url(#b)"/>
+<polygon points="86,0 90,0 0,74 0,70" fill="#FC6111" fill-opacity=".5"/>
+<polygon points="99,0 101,0 12,83 6,83" fill="#FC6111" fill-opacity=".22"/>
+<polygon points="395,83 468,0 540,0 467,83" fill="url(#c)"/>
+<polygon points="440,83 505,0 520,0 455,83" fill="#ffffff" fill-opacity=".025"/>
+</svg>
