@@ -599,3 +599,19 @@ html[data-launch] [data-prelaunch="team"]{display:none}
  .brand-logo-color{opacity:1}
  .brand-logo-gray{opacity:0}
 }
+
+/* v9.5 (24.11.2026): линии надзаголовков снова затухают к левому и правому краю (приём v7 — градиент из прозрачного),
+   у текста — яркий оранжевый без подмешивания серого. В v8.x линии стали сплошными 2 px — это была регрессия.
+   Длина линии: 72 px на телефоне, 160 px на компьютере; цвет: на тёмном #FC6111, на светлом #FB6512 (Т-1). */
+.section-kicker.section-kicker{--kl:252,97,17}
+.white .section-kicker.section-kicker{--kl:251,101,18}
+.section-kicker.section-kicker:before,.section-kicker.section-kicker:after,
+.white .section-kicker.section-kicker:before,.white .section-kicker.section-kicker:after{flex:0 1 72px;height:2px;background:linear-gradient(90deg,rgba(var(--kl),0) 0%,rgba(var(--kl),.55) 40%,rgb(var(--kl)) 100%)}
+.section-kicker.section-kicker:after,.white .section-kicker.section-kicker:after{background:linear-gradient(270deg,rgba(var(--kl),0) 0%,rgba(var(--kl),.55) 40%,rgb(var(--kl)) 100%)}
+@media(min-width:1024px){
+ .section-kicker.section-kicker:before,.section-kicker.section-kicker:after,
+ .white .section-kicker.section-kicker:before,.white .section-kicker.section-kicker:after{flex-basis:160px}
+}
+
+/* v9.6: фото банок в пункте 04 «Почему АНТИКОРИКА» — портретный кадр 6:5, поэтому рамка фиксированной пропорции (иначе на планшете полоса 140 px обрезала бы банки) */
+.advantages-grid .card-img.card-img--cans{aspect-ratio:6/5;height:auto;min-height:0;align-self:center;justify-self:center;width:min(100%,240px);object-fit:cover}
